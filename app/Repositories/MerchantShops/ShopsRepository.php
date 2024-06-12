@@ -6,6 +6,7 @@ use App\Models\Backend\Merchant;
 use App\Models\District;
 use App\Models\MerchantShops;
 use App\Repositories\MerchantShops\ShopsInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class ShopsRepository implements ShopsInterface{
 

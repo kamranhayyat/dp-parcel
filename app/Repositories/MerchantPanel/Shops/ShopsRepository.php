@@ -5,6 +5,7 @@ use App\Models\District;
 use App\Models\MerchantShops;
 use App\Repositories\MerchantPanel\Shops\ShopsInterface;
 use App\Models\Backend\Merchant;
+use Illuminate\Database\Eloquent\Collection;
 
 class ShopsRepository implements ShopsInterface{
 
@@ -62,7 +63,7 @@ class ShopsRepository implements ShopsInterface{
         return MerchantShops::destroy($id);
     }
 
-    public function getAllDistricts(): \Illuminate\Support\Collection
+    public function getAllDistricts(): Collection
     {
         return District::query()->get();
     }
