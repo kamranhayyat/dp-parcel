@@ -3,6 +3,7 @@ namespace App\Repositories\MerchantShops;
 
 use App\Enums\Status;
 use App\Models\Backend\Merchant;
+use App\Models\District;
 use App\Models\MerchantShops;
 use App\Repositories\MerchantShops\ShopsInterface;
 
@@ -37,6 +38,7 @@ class ShopsRepository implements ShopsInterface{
         try {
             $shop                   = new MerchantShops();
             $shop->merchant_id      = $request->merchant_id;
+            $shop->district_id = $request->district_id;
             $shop->name             = $request->name;
             $shop->contact_no       = $request->contact_no;
             $shop->address          = $request->address;
@@ -58,6 +60,7 @@ class ShopsRepository implements ShopsInterface{
                 $shop->merchant_id = $request->merchant_id;
                 $shop->name        = $request->name;
                 $shop->contact_no  = $request->contact_no;
+                $shop->district_id = $request->district_id;
                 $shop->address     = $request->address;
                 $shop->merchant_lat= $request->lat;
                 $shop->merchant_long= $request->long;
@@ -73,6 +76,11 @@ class ShopsRepository implements ShopsInterface{
 
         public function delete($id){
             return MerchantShops::destroy($id);
+        }
+
+        public function getAllDistricts(): Collection
+        {
+            return District::query()->get();
         }
 
 

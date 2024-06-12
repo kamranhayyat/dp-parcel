@@ -66,6 +66,19 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="contact">{{ __('merchantshops.district') }}</label> <span class="text-danger">*</span>
+                                    <select id="district_id" name="district_id" data-parsley-trigger="change" require class="form-control">
+                                        @foreach($districts as $district)
+                                            <option value="{{ $district->id }}" {{ (old('district_id', $shop->district_id) == $district->id) ? 'selected' : '' }}>
+                                                {{ $district->sector }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('district')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
                                     <label for="status">{{__('levels.status')}}</label> <span class="text-danger">*</span>
                                     <select name="status" class="form-control @error('status') is-invalid @enderror">
                                         @foreach(trans('status') as $key => $status)

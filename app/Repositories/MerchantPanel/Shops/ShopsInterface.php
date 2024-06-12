@@ -9,4 +9,5 @@ interface ShopsInterface {
     public function update($id, $request);
     public function delete($id);
     public function getMerchant($id);
+    public function getAllDistricts();
 }

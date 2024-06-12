@@ -35,10 +35,11 @@ class MerchantShopsController extends Controller
     public function create($id){
         $merchant_id    = $id;
         $singleMerchant = $this->repoMerchant->get($id);
+        $districts = $this->repo->getAllDistricts();
         if(blank($singleMerchant)){
             abort(404);
         }
-        return view('backend.merchant.shops.create',compact('merchant_id','singleMerchant'));
+        return view('backend.merchant.shops.create',compact('merchant_id','singleMerchant', 'districts'));
     }
 
     //merchant shops store
@@ -58,10 +59,11 @@ class MerchantShopsController extends Controller
         $edit_shop      = $this->repo->get($id);
         $merchant_id    = $edit_shop->merchant_id;
         $singleMerchant = $this->repoMerchant->get($merchant_id);
+        $districts = $this->repo->getAllDistricts();
         if(blank($singleMerchant) || blank($edit_shop)){
             abort(404);
         }
-        return view('backend.merchant.shops.edit', compact('edit_shop','merchant_id','singleMerchant'));
+        return view('backend.merchant.shops.edit', compact('edit_shop','merchant_id','singleMerchant', 'districts'));
     }
 
     public function update(UpdateRequest $request){

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Backend\Merchant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -16,6 +17,7 @@ class MerchantShops extends Model
     protected $fillable = [
 
         'merchant_id',
+        'district_id',
         'name',
         'contact_no',
         'address',
@@ -41,6 +43,11 @@ class MerchantShops extends Model
     public function merchant()
     {
         return $this->belongsTo(Merchant::class);
+    }
+
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class);
     }
 
 

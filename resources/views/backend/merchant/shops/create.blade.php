@@ -40,14 +40,14 @@
                       </div>
 
 
-                      <div class="form-group"> 
+                      <div class="form-group">
                             <label for="contact">{{ __('merchantshops.contact') }}</label> <span class="text-danger">*</span>
                             <div class="input-group mb-3">
                                 <span class="input-group-text">{{ mobile_prefix() }}</span>
-                                <div class="form-floating"> 
+                                <div class="form-floating">
                                     <input id="contact" type="number" name="contact_no" data-parsley-trigger="change" placeholder="{{ __('placeholder.Enter_contact_no') }}" autocomplete="off" class="form-control input-end-redius" value="{{old('contact_no')}}" require>
                                 </div>
-                            </div>   
+                            </div>
                             @error('contact_no')
                                 <small class="text-danger mt-2">{{ $message }}</small>
                             @enderror
@@ -71,6 +71,20 @@
                           <div class="">
                               <div id="googleMap" class="custom-map"></div>
                           </div>
+                      </div>
+
+                      <div class="form-group">
+                          <label for="contact">{{ __('merchantshops.district') }}</label> <span class="text-danger">*</span>
+                          <select id="district_id" name="district_id" data-parsley-trigger="change" require class="form-control">
+                              @foreach($districts as $district)
+                                  <option value="{{ $district->id }}">
+                                      {{ $district->sector }}
+                                  </option>
+                              @endforeach
+                          </select>
+                          @error('district')
+                          <small class="text-danger mt-2">{{ $message }}</small>
+                          @enderror
                       </div>
 
                       <div class="form-group">

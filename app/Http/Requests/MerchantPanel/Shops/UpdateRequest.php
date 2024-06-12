@@ -27,7 +27,8 @@ class UpdateRequest extends FormRequest
             'name'       =>['required'],
             'contact_no' =>['required','numeric','digits_between:11,14'],
             'address'    =>['required'],
-            'status'     =>['required']
+            'status'     =>['required'],
+            'district_id'   =>['required']
         ];
     }
 }

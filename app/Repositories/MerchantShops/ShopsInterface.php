@@ -10,4 +10,5 @@ interface ShopsInterface {
     public function delete($id);
     public function defaultShop($merchant_id,$id);
     public function merchant_shops_get($id);
+    public function getAllDistricts();
 }

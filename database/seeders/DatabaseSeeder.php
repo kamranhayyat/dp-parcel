@@ -66,6 +66,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BlogSeeder::class);
         $this->call(PageSeeder::class);
         $this->call(SectionSeeder::class);
- 
+        $this->call(DistrictsSeeder::class);
     }
 }

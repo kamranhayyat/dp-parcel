@@ -15,6 +15,6 @@ return [
         'active'            => 'Active',
         'inactive'          => 'Inactive',
         'add_default'       => 'Add Default',
-        'default'           => 'Default'
-
-      ];
+        'default'           => 'Default',
+        'district'          => 'Territories'
+];

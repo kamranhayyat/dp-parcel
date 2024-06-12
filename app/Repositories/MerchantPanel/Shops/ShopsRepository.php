@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories\MerchantPanel\Shops;
 
+use App\Models\District;
 use App\Models\MerchantShops;
 use App\Repositories\MerchantPanel\Shops\ShopsInterface;
 use App\Models\Backend\Merchant;
@@ -23,6 +24,7 @@ class ShopsRepository implements ShopsInterface{
         try {
                 $shop              = new MerchantShops();
                 $shop->merchant_id = $id;
+                $shop->district_id = $request->district_id;
                 $shop->name        = $request->name;
                 $shop->contact_no  = $request->contact_no;
                 $shop->address     = $request->address;
@@ -43,6 +45,7 @@ class ShopsRepository implements ShopsInterface{
                 $shop               = MerchantShops::where('id',$id)->first();
                 $shop->name         = $request->name;
                 $shop->contact_no   = $request->contact_no;
+                $shop->district_id = $request->district_id;
                 $shop->address      = $request->address;
                 $shop->merchant_lat = $request->lat;
                 $shop->merchant_long= $request->long;
@@ -57,6 +60,11 @@ class ShopsRepository implements ShopsInterface{
 
     public function delete($id){
         return MerchantShops::destroy($id);
+    }
+
+    public function getAllDistricts(): \Illuminate\Support\Collection
+    {
+        return District::query()->get();
     }
 
 

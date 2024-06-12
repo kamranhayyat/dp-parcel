@@ -43,7 +43,7 @@
                             <label for="contact">{{ __('merchantshops.contact') }}</label> <span class="text-danger">*</span>
                             <div class="input-group mb-3">
                                 <span class="input-group-text">{{ mobile_prefix() }}</span>
-                                <div class="form-floating"> 
+                                <div class="form-floating">
                                     <input id="contact" type="number" name="contact_no" data-parsley-trigger="change" placeholder="{{ __('placeholder.Enter_contact_no') }}" autocomplete="off" class="form-control input-end-redius" value="{{$edit_shop->contact_no}}" require>
                                 </div>
                             </div>

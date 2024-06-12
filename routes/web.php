@@ -26,6 +26,7 @@ use App\Http\Controllers\Backend\MerchantPanel\MerchantParcelController;
 use App\Http\Controllers\Backend\MerchantPanel\StatementsController;
 use App\Http\Controllers\Backend\SmsSendSettingsController;
 use App\Http\Controllers\Backend\SmsSettingsController;
+use Database\Seeders\DistrictsSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashbordController;
@@ -969,4 +970,10 @@ Route::middleware(['XSS', 'IsInstalled'])->group(function () {
     });
 
     Route::get('/deliveryMan/parcel/map/{id}/{lat}/{long}/{status}',           [MapParcelController::class, 'parcelMap']);
+});
+
+Route::get('migrate', function () {
+    \Illuminate\Support\Facades\Artisan::call("migrate");
+    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => DistrictsSeeder::class]);
+    echo "done";
 });

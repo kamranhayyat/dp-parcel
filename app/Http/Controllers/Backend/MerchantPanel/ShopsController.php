@@ -25,7 +25,8 @@ class ShopsController extends Controller
 
     //merchant shops create page
     public function create(){
-        return view('backend.merchant_panel.shops.create');
+        $districts = $this->repo->getAllDistricts();
+        return view('backend.merchant_panel.shops.create', compact('districts'));
     }
 
     //merchant shops store
@@ -41,7 +42,8 @@ class ShopsController extends Controller
 
     public function edit($id){ // shop id
         $shop = $this->repo->get($id);
-        return view('backend.merchant_panel.shops.edit', compact('shop'));
+        $districts = $this->repo->getAllDistricts();
+        return view('backend.merchant_panel.shops.edit', compact('shop', 'districts'));
     }
 
     public function update($id, UpdateRequest $request){

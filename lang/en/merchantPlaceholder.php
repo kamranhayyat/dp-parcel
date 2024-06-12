@@ -20,5 +20,5 @@ return array (
     'amount'         => 'Select amount',
     'select_account' => 'Select Merchant Account',
     'date_format'    => 'yyyy-mm-dd',
- 
+    'select_district'  => 'Select District',
 );

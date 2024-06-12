@@ -27,7 +27,8 @@ class StoreRequest extends FormRequest
             'name'       =>['required'],
             'contact_no' =>['required','numeric','digits_between:11,14'],
             'address'    =>['required'],
-            'status'     =>['required','numeric']
+            'status'     =>['required','numeric'],
+            'district_id'   =>['required']
         ];
     }
 }
