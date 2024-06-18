@@ -84,13 +84,11 @@
                                 <tr>
                                     <th>{{ __('levels.id') }}</th>
                                     <th>{{ __('levels.category') }}</th>
-                                    <th>{{ __('levels.weight') }}</th>
-                                    <th>{{ __('levels.position') }}</th>
+                                    <th>{{ __('levels.sub_category') }}</th>
+                                    <th>{{ __('levels.first_kg') }}</th>
+                                    <th>{{ __('levels.other_kg') }}</th>
+                                    <th>{{ __('levels.time') }}</th>
                                     <th>{{ __('levels.status') }}</th>
-                                    <th>{{ __('levels.same_day') }}</th>
-                                    <th>{{ __('levels.next_day') }}</th>
-                                    <th>{{ __('levels.sub_city') }}</th>
-                                    <th>{{ __('levels.outside_city') }}</th>
                                     @if(hasPermission('delivery_charge_update') == true || hasPermission('delivery_charge_delete') == true)
                                     <th>{{ __('levels.actions') }}</th>
                                     @endif
@@ -101,14 +99,12 @@
                                 @foreach($delivery_charges as $delivery_charge)
                                 <tr>
                                     <td>{{$i++}}</td>
-                                    <td>{{$delivery_charge->category->title}}</td>
-                                    <td>{{$delivery_charge->weight ?? 0}}</td>
-                                    <td>{{$delivery_charge->position}}</td>
+                                    <td>{!! $delivery_charge->category !!}</td>
+                                        <td>{!! $delivery_charge->category == 'normal' ? $delivery_charge->sub_category : '' !!}</td>
+                                    <td>{!! $delivery_charge->first_kg !!}</td>
+                                    <td>{!! $delivery_charge->other_kg !!}</td>
+                                    <td>{!! in_array($delivery_charge->category, ['same_day', 'express']) ? $delivery_charge->time : '' !!}</td>
                                     <td>{!! $delivery_charge->my_status !!}</td>
-                                    <td>{{settings()->currency}}{{$delivery_charge->next_day}}</td>
-                                    <td>{{settings()->currency}}{{$delivery_charge->same_day}}</td>
-                                    <td>{{settings()->currency}}{{$delivery_charge->sub_city}}</td>
-                                    <td>{{settings()->currency}}{{$delivery_charge->outside_city}}</td>
                                     @if(hasPermission('delivery_charge_update') == true || hasPermission('delivery_charge_delete') == true)
                                     <td>
                                         <div class="row">

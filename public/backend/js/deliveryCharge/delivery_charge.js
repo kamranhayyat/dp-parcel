@@ -1,25 +1,24 @@
 "use strict";
-// Delivery charge -> When category selected KG. then show weight otherwise hide weight
-  // start
-  if($("#category").val() == 1)
-  {
-      $("#weight_group").show();
-  }
-  else
-  {
-      $("#weight_group").hide();
-  }
 
-  $("#category").on('change', function () {
+// Delivery charge -> When category selected Same Day or Express, then show time fields otherwise not
+$("#category").on('change', function () {
+    var selectedSlug = $("#category option:selected").data('value');
 
-      if($("#category").val() == 1)
-      {
-          $("#weight_group").show();
-      }
-      else
-      {
-          $("#weight_group").hide();
-      }
+    if(selectedSlug === 'same_day' || selectedSlug === 'express') {
+        $("#time_group").removeClass('d-none');
+        $("#sub-cat-group").addClass('d-none');
+    } else if(selectedSlug === 'normal') {
+        $("#sub-cat-group").removeClass('d-none');
+        $("#time_group").addClass('d-none');
+    } else {
+        $("#time_group").addClass('d-none');
+        $("#sub-cat-group").addClass('d-none');
+    }
 
-  });
-  // end
+    // Update the hidden input with the selected slug value
+    $("#category_slug").val(selectedSlug);
+});
+
+$(document).ready(function() {
+    $("#category").trigger('change');
+});

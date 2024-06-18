@@ -124,7 +124,7 @@ class MerchantRepository implements MerchantInterface
             $shop->status       = $request->status;
             $shop->default_shop = Status::ACTIVE;
             $shop->save();
-            $deliveryCharges =  DeliveryCharge::with('category')->orderBy('position')->get();
+            $deliveryCharges =  DeliveryCharge::orderBy('position')->get();
             if (!blank($deliveryCharges)) {
                 foreach ($deliveryCharges as $delivery) {
                     $deliveryCharge                      = new MerchantDeliveryCharge();
@@ -201,7 +201,7 @@ class MerchantRepository implements MerchantInterface
 
             $shop->save();
 
-            $deliveryCharges =  DeliveryCharge::with('category')->orderBy('position')->get();
+            $deliveryCharges =  DeliveryCharge::orderBy('position')->get();
 
             if (!blank($deliveryCharges)) {
                 foreach ($deliveryCharges as $delivery) {
@@ -560,7 +560,7 @@ class MerchantRepository implements MerchantInterface
             $shop->default_shop = Status::ACTIVE;
             $shop->save();
 
-            $deliveryCharges =  DeliveryCharge::with('category')->orderBy('position')->get();
+            $deliveryCharges =  DeliveryCharge::orderBy('position')->get();
 
             if (!blank($deliveryCharges)) {
                 foreach ($deliveryCharges as $delivery) {

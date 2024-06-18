@@ -49,7 +49,7 @@ class MerchantSeeder extends Seeder
         $merchant->address             = "Dhaka";
         $merchant->save();
 
-        $deliveryCharges =  DeliveryCharge::with('category')->orderBy('position')->get();
+        $deliveryCharges =  DeliveryCharge::orderBy('position')->get();
 
         if(!blank($deliveryCharges)){
             foreach ($deliveryCharges as $delivery){

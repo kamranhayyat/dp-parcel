@@ -53,9 +53,21 @@ class DeliveryCharge extends Model
         return $status;
     }
 
-     // Get single row in Delivery Category table.
-     public function category()
+     public static function category()
      {
-         return $this->belongsTo(Deliverycategory::class, 'category_id', 'id');
+         return [
+             'express' => 'Express',
+             'same_day' => 'Same Day',
+             'normal' => 'Normal',
+         ];
+     }
+
+     public static function subCategory()
+     {
+         return [
+             'same_sector' => 'Same District',
+             'within_sector' => 'Within District',
+             'different_sector' => 'Different District',
+         ];
      }
 }

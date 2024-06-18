@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Backend\DeliveryCharge;
 use Illuminate\Http\Request;
 use App\Http\Requests\DeliveryCharge\StoreRequest;
 use App\Http\Requests\DeliveryCharge\UpdateRequest;
@@ -31,8 +32,9 @@ class DeliveryChargeController extends Controller
 
     public function create()
     {
-        $categories = $this->repo->categories();
-        return view('backend.delivery_charge.create',compact('categories'));
+        $categories = DeliveryCharge::category();
+        $subCategories = DeliveryCharge::subCategory();
+        return view('backend.delivery_charge.create', compact('categories', 'subCategories'));
     }
 
     public function store(StoreRequest $request)
@@ -48,9 +50,10 @@ class DeliveryChargeController extends Controller
 
     public function edit($id)
     {
-        $categories = $this->repo->categories();
+        $categories = DeliveryCharge::category();
+        $subCategories = DeliveryCharge::subCategory();
         $delivery_charge = $this->repo->get($id);
-        return view('backend.delivery_charge.edit',compact('delivery_charge', 'categories'));
+        return view('backend.delivery_charge.edit',compact('delivery_charge', 'categories','subCategories'));
     }
 
     public function update(UpdateRequest $request)

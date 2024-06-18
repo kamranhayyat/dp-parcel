@@ -37,67 +37,64 @@
                                 <div class="form-group">
                                     <label for="category">{{ __('levels.category') }}</label> <span class="text-danger">*</span>
                                     <select id="category" name="category" class="form-control @error('category') is-invalid @enderror">
-                                        @foreach($categories as $category)
-                                            <option {{ old('category',$delivery_charge->category_id) == $category->id ? 'selected':'' }} value="{{ $category->id }}">{{ $category->title }}</option>
+                                        <option selected disabled>{{ __('menus.select') }}</option>
+                                        @foreach($categories as $key => $value)
+                                            <option value="{{ $key }}" {{ (old('category', $delivery_charge->category) == $key) ? 'selected' : '' }} data-value="{{ $key }}">
+                                                {{ $value }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('category')
-                                        <small class="text-danger mt-2">{{ $message }}</small>
+                                    <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
                                 </div>
+                                <div class="form-group d-none" id="sub-cat-group">
+                                    <label for="sub_category">{{ __('levels.sub_category') }}</label> <span class="text-danger">*</span>
+                                    <select id="sub_category" name="sub_category" class="form-control @error('sub_category') is-invalid @enderror">
+                                        <option selected disabled>{{ __('menus.select') }}</option>
+                                        @foreach($subCategories as $key => $value)
+                                            <option value="{{ $key }}" {{ (old('category', $delivery_charge->sub_category) == $key) ? 'selected' : '' }} data-value="{{ $key }}">
+                                                {{ $value }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('sub_category')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <input type="hidden" id="category_slug" name="category_slug" value="{{ old('category_slug') }}">
                                 <div class="form-group" id="weight_group">
-                                    <label for="weight">{{ __('levels.weight') }}</label> <span class="text-danger">*</span>
-                                    <input id="weight" type="number" name="weight" data-parsley-trigger="change" placeholder="{{ __('placeholder.Enter_weight') }}" autocomplete="off" class="form-control" value="{{ old('weight',$delivery_charge->weight) }}" require>
-                                    @error('weight')
-                                        <small class="text-danger mt-2">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="same_day">{{ __('levels.same_day') }}</label> <span class="text-danger">*</span>
-                                    <input id="same_day" type="number" name="same_day" data-parsley-trigger="change" placeholder="{{ __('placeholder.enter_same_day') }}" autocomplete="off" class="form-control" value="{{ old('same_day',$delivery_charge->same_day) }}" require>
-                                    @error('same_day')
-                                        <small class="text-danger mt-2">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="next_day">{{ __('levels.next_day') }}</label> <span class="text-danger">*</span>
-                                    <input id="next_day" type="number" name="next_day" data-parsley-trigger="change" placeholder="{{ __('placeholder.enter_next_day') }}" autocomplete="off" class="form-control" value="{{ old('next_day',$delivery_charge->next_day) }}" require>
-                                    @error('next_day')
-                                        <small class="text-danger mt-2">{{ $message }}</small>
+                                    <label for="first_kg">{{ __('levels.first_kg') }}</label> <span class="text-danger">*</span>
+                                    <input value="{{$delivery_charge->first_kg}}" id="first_kg" type="number" name="first_kg" data-parsley-trigger="change" placeholder="{{ __('placeholder.Enter_rate') }}" autocomplete="off" class="form-control" value="{{old('first_kg')}}" require>
+                                    @error('first_kg')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="status">{{ __('levels.status') }}</label> <span class="text-danger">*</span>
-                                    <select name="status" class="form-control @error('status') is-invalid @enderror">
-                                        @foreach(trans('status') as $key => $status)
-                                            <option value="{{ $key }}" {{ (old('status',$delivery_charge->status) == $key) ? 'selected' : '' }}>{{ $status }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('status')
+                                    <label for="other_kg">{{ __('levels.other_kg') }}</label> <span class="text-danger">*</span>
+                                    <input  value="{{$delivery_charge->other_kg}}" id="other_kg" type="number" name="other_kg" data-parsley-trigger="change" placeholder="{{ __('placeholder.Enter_rate') }}" autocomplete="off" class="form-control" value="{{old('other_kg')}}" require>
+                                    @error('other_kg')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="form-group d-none" id="time_group">
+                                    <label for="time">{{ __('levels.time') }}</label> <span class="text-danger">*</span>
+                                    <input id="time" type="number" name="time" data-parsley-trigger="change" placeholder="{{ __('placeholder.Enter_time') }}" autocomplete="off" class="form-control" value="{{old('time')}}" require>
+                                    @error('time')
                                     <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 <div class="form-group">
-                                    <label for="sub_city">{{ __('levels.sub_city') }}</label> <span class="text-danger">*</span>
-                                    <input id="sub_city" type="number" name="sub_city" data-parsley-trigger="change" placeholder="{{ __('placeholder.enter_sub_city') }}" autocomplete="off" class="form-control" value="{{ old('sub_city',$delivery_charge->sub_city) }}" require>
-                                    @error('sub_city')
-                                        <small class="text-danger mt-2">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="outside_city">{{ __('levels.outside_city') }}</label> <span class="text-danger">*</span>
-                                    <input id="outside_city" type="number" name="outside_city" data-parsley-trigger="change" placeholder="{{ __('placeholder.enter_outside_city') }}" autocomplete="off" class="form-control" value="{{ old('outside_city',$delivery_charge->outside_city) }}" require>
-                                    @error('outside_city')
-                                        <small class="text-danger mt-2">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="position">{{ __('levels.position') }}</label> <span class="text-danger">*</span>
-                                    <input id="position" type="number" name="position" data-parsley-trigger="change" autocomplete="off" placeholder="{{ __('placeholder.Enter_Position') }}" class="form-control" value="{{ old('position',$delivery_charge->position) }}" require>
-                                    @error('position')
-                                        <small class="text-danger mt-2">{{ $message }}</small>
+                                    <label for="status">{{ __('levels.status') }}</label> <span class="text-danger">*</span>
+                                    <select name="status" class="form-control @error('status') is-invalid @enderror">
+                                        @foreach(trans('status') as $key => $status)
+                                            <option value="{{ $key }}" {{ (old('status',\App\Enums\Status::ACTIVE) == $key) ? 'selected' : '' }}>{{ $status }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('status')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
                                 </div>
                             </div>

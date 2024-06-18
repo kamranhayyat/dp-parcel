@@ -9,8 +9,8 @@ use Illuminate\Support\Arr;
 
 class DeliveryChargeRepository implements DeliveryChargeInterface{
     public function allGet(){
-        $dCharges      = DeliveryCharge::with('category')->orderBy('position')->get();
-        $categoryWise  = $dCharges->groupBy('category_id'); 
+        $dCharges      = DeliveryCharge::orderBy('position')->get();
+        $categoryWise  = $dCharges->groupBy('category_id');
         return Arr::collapse($categoryWise);
         $Charges = [];
         foreach ($categoryWise as $key=>$Deliverycharge) {
@@ -21,16 +21,16 @@ class DeliveryChargeRepository implements DeliveryChargeInterface{
         return $Charges;
     }
     public function getAllCharge(){
-        $dCharges      = DeliveryCharge::with('category')->orderBy('position')->get();
-        $categoryWise  = $dCharges->groupBy('category_id'); 
+        $dCharges      = DeliveryCharge::orderBy('position')->get();
+        $categoryWise  = $dCharges->groupBy('category_id');
         return Arr::collapse($categoryWise);
     }
     public function all(){
-        return DeliveryCharge::with('category')->orderBy('position')->paginate(10);
+        return DeliveryCharge::orderBy('position')->paginate(10);
     }
 
      public function filter($request){
-         return DeliveryCharge::with('category')->where(function($query)use($request){
+         return DeliveryCharge::where(function($query)use($request){
              if($request->category){
                  $query->where('category_id',$request->category);
              }
@@ -52,16 +52,11 @@ class DeliveryChargeRepository implements DeliveryChargeInterface{
     public function store($request){
         try {
             $delivery_charge               = new DeliveryCharge();
-            $delivery_charge->category_id  = $request->category;
-            // When category select kg. then weight = null
-            if($request->category == 1):
-                $delivery_charge->weight   = $request->weight;
-            endif;
-            $delivery_charge->same_day     = $request->same_day;
-            $delivery_charge->next_day     = $request->next_day;
-            $delivery_charge->sub_city     = $request->sub_city;
-            $delivery_charge->outside_city = $request->outside_city;
-            $delivery_charge->position     = $request->position;
+            $delivery_charge->category  = $request->category;
+            $delivery_charge->sub_category  = $request->sub_category;
+            $delivery_charge->first_kg  = $request->first_kg;
+            $delivery_charge->other_kg  = $request->other_kg;
+            $delivery_charge->time  = $request->time;
             $delivery_charge->status       = $request->status;
             $delivery_charge->save();
             return true;
@@ -75,16 +70,11 @@ class DeliveryChargeRepository implements DeliveryChargeInterface{
     {
         try {
             $delivery_charge               = DeliveryCharge::find($request->id);
-            $delivery_charge->category_id  = $request->category;
-            // When category select kg. then weight = null
-            if($request->category == 1):
-                $delivery_charge->weight   = $request->weight;
-            endif;
-            $delivery_charge->same_day     = $request->same_day;
-            $delivery_charge->next_day     = $request->next_day;
-            $delivery_charge->sub_city     = $request->sub_city;
-            $delivery_charge->outside_city = $request->outside_city;
-            $delivery_charge->position     = $request->position;
+            $delivery_charge->category  = $request->category;
+            $delivery_charge->sub_category  = $request->sub_category;
+            $delivery_charge->first_kg  = $request->first_kg;
+            $delivery_charge->other_kg  = $request->other_kg;
+            $delivery_charge->time  = $request->time;
             $delivery_charge->status       = $request->status;
             $delivery_charge->save();
             return true;

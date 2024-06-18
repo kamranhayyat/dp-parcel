@@ -51,6 +51,7 @@ return [
   'assigned_date'          => 'Assigned Date',
   'position'               => 'Position',
   'category'               => 'Category',
+  'sub_category'               => 'Sub Category',
   'weight'                 => 'Weight',
   'same_day'               => 'Same Day',
   'next_day'               => 'Next Day',
@@ -364,5 +365,8 @@ return [
     'wallet_use_activation'   =>'Wallet Use Activation',
     'invoice_setteld'         => 'Invoice Setteld (Days)',
     'documents'  =>'Documents',
+    'first_kg'               => 'First KG',
+    'other_kg'               => 'Other KG',
+    'time'                 => 'Time',
 
 ];

@@ -4,6 +4,7 @@ namespace App\Http\Requests\DeliveryCharge;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class StoreRequest extends FormRequest
 {
@@ -24,29 +25,25 @@ class StoreRequest extends FormRequest
      */
     public function rules()
     {
-        if (Request::input('category') == 1) {
-            return [
-                'category'      => ['required'],
-                'weight'        => ['required', 'numeric','unique:delivery_charges,weight'],
-                'same_day'      => ['required','numeric',],
-                'next_day'      => ['required','numeric',],
-                'sub_city'      => ['required','numeric',],
-                'outside_city'  => ['required','numeric',],
-                'position'      => ['required','numeric',],
-                'status'        => ['required','numeric',],
-            ];
-        }
-        else {
-            return [
-                'category'      => ['required', 'numeric','unique:delivery_charges,category_id'],
-                'same_day'      => ['required','numeric',],
-                'next_day'      => ['required','numeric',],
-                'sub_city'      => ['required','numeric',],
-                'outside_city'  => ['required','numeric',],
-                'position'      => ['required','numeric',],
-                'status'        => ['required','numeric',],
-            ];
+        $rules = [
+            'category'    => ['required', 'string'],
+            'first_kg'    => ['required', 'numeric'],
+            'other_kg'    => ['required', 'numeric'],
+            'status'      => ['required', 'numeric'],
+        ];
+
+        $categorySlug = $this->input('category_slug');
+
+        switch ($categorySlug) {
+            case 'same_day':
+            case 'express':
+                $rules['time'] = ['required', 'numeric'];
+                break;
+            case 'normal':
+                $rules['sub_category'] = ['required', 'string'];
+                break;
         }
 
+        return $rules;
     }
 }

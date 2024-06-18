@@ -75,6 +75,9 @@ return [
     'app_secret'                        => 'Enter App secret',
     'client_id'                         => 'Enter client ID',
     'client_secret'                     => 'Enter client secret',
+    'Enter_slug'             => 'Enter slug',
+    'Enter_rate'          =>     'Enter Rate',
+    'Enter_time'          =>     'Enter Time',
 
 
 ];
