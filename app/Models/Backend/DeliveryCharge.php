@@ -2,10 +2,12 @@
 
 namespace App\Models\Backend;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\Status;
 use App\Models\Backend\Deliverycategory;
+use Illuminate\Support\Carbon;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -14,15 +16,22 @@ class DeliveryCharge extends Model
     use HasFactory,LogsActivity;
 
 
-        protected $fillable = [
-                'category_id',
-                'weight',
-                'same_day',
-                'next_day',
-                'sub_city',
-                'outside_city',
-                'position',
-            ];
+    protected $fillable = [
+        'category',
+        'sub_category',
+        'first_kg',
+        'other_kg',
+        'time',
+        'weight',
+        'same_day',
+        'next_day',
+        'sub_city',
+        'outside_city',
+        'position',
+        'status',
+    ];
+
+        protected $casts = [];
 
         public function getActivitylogOptions(): LogOptions
         {
@@ -51,6 +60,18 @@ class DeliveryCharge extends Model
             $status = '<span class="badge badge-pill badge-danger">'.trans("status." . $this->status).'</span>';
         }
         return $status;
+    }
+
+    /**
+     * Cast time to 24h format
+     *
+     * @return Attribute
+     */
+    protected function time(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => Carbon::parse($value)->format('H:i'),
+        );
     }
 
      public static function category()

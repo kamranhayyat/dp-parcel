@@ -28,18 +28,12 @@ class UpdateRequest extends FormRequest
         $rules = [
             'category' => [
                 'required',
-                'in:express,same_day,normal',
-                Rule::unique('delivery_charges')->where(function (Builder $query) {
-                    return $query->whereIn('category', ['express', 'same_day']);
-                })
+                'in:express,same_day,normal'
             ],
             'sub_category' => [
                 'required_if:category,normal',
                 'in:same_sector,within_sector,different_sector',
-                'nullable',
-                Rule::unique('delivery_charges')->where(function (Builder $query) {
-                    return $query->where('category', $this->input('category'));
-                })
+                'nullable'
             ],
             'first_kg' => ['required', 'numeric'],
             'other_kg' => ['required', 'numeric'],
