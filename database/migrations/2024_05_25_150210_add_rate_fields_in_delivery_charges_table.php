@@ -5,8 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,6 +17,8 @@ return new class extends Migration
             $table->float('first_kg')->nullable(false);
             $table->float('other_kg')->nullable(false);
             $table->time('time')->nullable();
+
+            $table->unique(['category', 'sub_category']);
         });
     }
 

@@ -81,7 +81,7 @@
                                 </div>
                                 <div class="form-group d-none" id="time_group">
                                     <label for="time">{{ __('levels.time') }}</label> <span class="text-danger">*</span>
-                                    <input id="time" type="number" name="time" data-parsley-trigger="change" placeholder="{{ __('placeholder.Enter_time') }}" autocomplete="off" class="form-control" value="{{old('time')}}" require>
+                                    <input id="time" type="time" name="time" data-parsley-trigger="change" placeholder="{{ __('placeholder.Enter_time') }}" autocomplete="off" class="form-control" value="{{old('time')}}" require>
                                     @error('time')
                                     <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
