@@ -91,7 +91,8 @@ class ParcelController extends Controller
         $deliveryCharges    = $this->repo->deliveryCharges();
         $packagings         = $this->repo->packaging();
         $deliveryTypes      = $this->repo->deliveryTypes();
-        return view('backend.parcel.create', compact('merchants', 'deliveryCategories', 'deliveryCharges', 'deliveryTypes', 'packagings'));
+        $districts          = $this->shop->getAllDistricts();
+        return view('backend.parcel.create', compact('merchants', 'deliveryCategories', 'deliveryCharges', 'deliveryTypes', 'packagings', 'districts'));
     }
 
     /**
@@ -313,7 +314,6 @@ class ParcelController extends Controller
             return response()->json($response);
         } else {
             $merchant = Merchant::find($search);
-
             $response[] = array(
                 "vat"         => $merchant->vat ?? 0,
                 "cod_charges" => $merchant->cod_charges,

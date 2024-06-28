@@ -62,6 +62,17 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-12 col-md-6">
+                                    <label for="districts">{{ __('Districts') }}</label>
+                                    <select style="width: 100%" id="districts" class="form-control" name="districts">
+                                        @foreach($districts as $district)
+                                            <option value="{{$district->id}}">{{$district->sector}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('shop_id')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-12 col-md-6">
                                     <label for="pickup_phone">{{ __('parcel.pickup_phone') }}</label>
                                     <input id="pickup_phone" type="text" name="pickup_phone"
                                         data-parsley-trigger="change"
@@ -123,25 +134,6 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group col-12 col-md-6">
-                                    <label for="merchant">{{ __('parcel.category') }}</label> <span
-                                        class="text-danger">*</span>
-                                    <select style="width: 100%" id="category_id" class="form-control select2"
-                                        name="category_id" class="form-control @error('category_id') is-invalid @enderror"
-                                        data-url="{{ route('parcel.deliveryCategory.deliveryWeight') }}">
-                                        <option value=""> {{ __('menus.select') }} {{ __('levels.category') }}
-                                        </option>
-                                        @foreach ($deliveryCharges as $deliverycharge)
-                                            <option value="{{ $deliveryCategories[$deliverycharge]->id }}"
-                                                {{ old('category_id') == $deliveryCategories[$deliverycharge]->id ? 'selected' : '' }}>
-                                                {{ $deliveryCategories[$deliverycharge]->title }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('category_id')
-                                        <small class="text-danger mt-2">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
                                 <div class="form-group col-12 col-md-6" id="categoryWeight">
                                     <label for="weightID">{{ __('parcel.weight') }}</label> <span
                                         class="text-danger">*</span>
@@ -163,12 +155,6 @@
                                         name="delivery_type_id" required="">
                                         <option value=""> {{ __('menus.select') }} {{ __('menus.delivery_type') }}
                                         </option>
-                                        @foreach ($deliveryTypes as $key => $status)
-                                            <option
-                                                @if ($status->key == 'same_day') value="1" @elseif($status->key == 'next_day') value="2" @elseif($status->key == 'sub_city') value="3" @elseif($status->key == 'outside_City') value="4" @endif>
-                                                {{ __('deliveryType.' . $status->key) }}
-                                            </option>
-                                        @endforeach
                                     </select>
                                     @error('delivery_type_id')
                                         <small class="text-danger mt-2">{{ $message }}</small>

@@ -77,13 +77,7 @@ class ParcelRepository implements ParcelInterface
 
     public function deliveryTypes()
     {
-        $types = [
-            'same_day',
-            'next_day',
-            'sub_city',
-            'outside_City',
-        ];
-        return Config::whereIn('key', $types)->where('value', 1)->get();
+        return DeliveryCharge::category();
     }
 
 
@@ -1102,7 +1096,7 @@ class ParcelRepository implements ParcelInterface
                     //merchant sms
                     $merchant_sms = 'Dear ' . $parcel->merchant->business_name . ', parcel with ID ' . $parcel->tracking_id . ' to (' . $parcel->customer_name . ') ' . settings()->currency . $parcel->cash_collection . ' delivery man assing by ' . $deliverymanAssign->deliveryMan->user->name . ', ' . $deliverymanAssign->deliveryMan->user->mobile . '. Track here:' . url('/') . '  -' . settings()->name;
                     $merchant_sms_response =  app(SmsService::class)->sendSms($parcel->shop->contact_no, $merchant_sms);
-                    //deliveryman sms 
+                    //deliveryman sms
                     $deliveryman_sms =  'Dear ' . $deliveryUser->deliveryMan->user->name . ', your  parcel with ID ' . $parcel->tracking_id . ' Track here: ' . url('/') . ' -' . settings()->name;
                     $deliveryman_sms_response =  app(SmsService::class)->sendSms($deliveryUser->user->mobile, $deliveryman_sms);
                 }
@@ -1115,7 +1109,7 @@ class ParcelRepository implements ParcelInterface
                     $msgMerchantNotification = 'Dear ' . $parcel->merchant->business_name . ', parcel with ID ' . $parcel->tracking_id . ' to (' . $parcel->customer_name . ') ' . settings()->currency . $parcel->cash_collection . ' delivery man assing by ' . $deliverymanAssign->deliveryMan->user->name . ', ' . $deliverymanAssign->deliveryMan->user->mobile . '. Track here:' . url('/') . '  -' . settings()->name;
 
                     app(PushNotificationService::class)->sendStatusPushNotificationTo($parcel, $parcel->merchant->user->web_token, $msgMerchantNotification, 'Merchant');
-                    //end push notification 
+                    //end push notification
 
                     $data['parcel']             = $parcel;
                     $data['deliverymanAssign']  = $deliverymanAssign;
@@ -1191,7 +1185,7 @@ class ParcelRepository implements ParcelInterface
                 //merchant sms
                 $merchant_sms = 'Dear ' . $parcel->merchant->business_name . ', parcel with ID ' . $parcel->tracking_id . ' to (' . $parcel->customer_name . ') ' . settings()->currency . $parcel->cash_collection . ' delivery man assing by ' . $deliverymanAssign->deliveryMan->user->name . ', ' . $deliverymanAssign->deliveryMan->user->mobile . '. Track here:' . url('/') . '  -' . settings()->name;
                 $merchant_sms_response =  app(SmsService::class)->sendSms($parcel->shop->contact_no, $merchant_sms);
-                //deliveryman sms 
+                //deliveryman sms
                 $deliveryman_sms =  'Dear ' . $deliverymanAssign->deliveryMan->user->name . ', your  parcel with ID ' . $parcel->tracking_id . ' Track here: ' . url('/') . ' -' . settings()->name;
                 $deliveryman_sms_response =  app(SmsService::class)->sendSms($deliveyrman->user->mobile, $deliveryman_sms);
             }
@@ -1204,7 +1198,7 @@ class ParcelRepository implements ParcelInterface
                 $msgMerchantNotification = 'Dear ' . $parcel->merchant->business_name . ', parcel with ID ' . $parcel->tracking_id . ' to (' . $parcel->customer_name . ') ' . settings()->currency . $parcel->cash_collection . ' delivery man assing by ' . $deliverymanAssign->deliveryMan->user->name . ', ' . $deliverymanAssign->deliveryMan->user->mobile . '. Track here:' . url('/') . '  -' . settings()->name;
 
                 app(PushNotificationService::class)->sendStatusPushNotificationTo($parcel, $parcel->merchant->user->web_token, $msgMerchantNotification, 'Merchant');
-                //end push notification 
+                //end push notification
 
                 $data['parcel']             = $parcel;
                 $data['deliverymanAssign']  = $deliverymanAssign;

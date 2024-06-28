@@ -137,6 +137,8 @@ function getLatLongPosition(latitude, longitude) {
         $('#lat').val(latLng.lat);
         $('#long').val(latLng.lng);
 
+        updateDeliveryOptions(latLng.lat, latLng.lng);
+
         if (marker)
             marker.setMap(null);
         marker = new google.maps.Marker({
@@ -262,5 +264,27 @@ function distance(lat1, lon1, lat2, lon2) {
     dist = dist * 60 * 1.1515
     dist = dist * 1.609344
     return dist
+}
+
+function updateDeliveryOptions(lat, lng) {
+    var pickupLat = parseFloat($('#pickup_lat').val());
+    var pickupLong = parseFloat($('#pickup_long').val());
+    var dist = distance(pickupLat, pickupLong, lat, lng);
+    console.log("distance in kms: " + dist);
+
+    var $deliveryTypeSelect = $('#delivery_type_id');
+
+    $deliveryTypeSelect.find('option').not(':first').remove();
+
+    if (dist <= 15) {
+        $deliveryTypeSelect.append('<option value="express">Express</option>');
+    } else if (dist <= 50) {
+        $deliveryTypeSelect.append('<option value="express">Express</option>');
+        $deliveryTypeSelect.append('<option value="same_day">Same Day</option>');
+    } else {
+        $deliveryTypeSelect.append('<option value="normal">Normal</option>');
+    }
+
+    $deliveryTypeSelect.trigger('change.select2');
 }
 
