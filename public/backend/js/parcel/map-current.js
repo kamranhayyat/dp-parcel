@@ -270,21 +270,37 @@ function updateDeliveryOptions(lat, lng) {
     var pickupLat = parseFloat($('#pickup_lat').val());
     var pickupLong = parseFloat($('#pickup_long').val());
     var dist = distance(pickupLat, pickupLong, lat, lng);
+    $('#delivery_distance').val(dist);
     console.log("distance in kms: " + dist);
 
     var $deliveryTypeSelect = $('#delivery_type_id');
+    var defaultParcelTime = $('#default_parcel_time').val(); // Format: "15:00:00"
+
+    var currentTime = new Date();
+    currentTime.setHours(14);
+    currentTime.setMinutes(0);
+
+    var [defaultHours, defaultMinutes] = defaultParcelTime.split(':').map(Number);
 
     $deliveryTypeSelect.find('option').not(':first').remove();
 
+    var isAfterDefaultTime = (currentTime.getHours() > defaultHours) ||
+        (currentTime.getHours() === defaultHours && currentTime.getMinutes() > defaultMinutes);
+
     if (dist <= 15) {
-        $deliveryTypeSelect.append('<option value="express">Express</option>');
+        if (!isAfterDefaultTime) {
+            $deliveryTypeSelect.append('<option value="express">Express</option>');
+        }
     } else if (dist <= 50) {
-        $deliveryTypeSelect.append('<option value="express">Express</option>');
-        $deliveryTypeSelect.append('<option value="same_day">Same Day</option>');
+        if (!isAfterDefaultTime) {
+            $deliveryTypeSelect.append('<option value="express">Express</option>');
+            $deliveryTypeSelect.append('<option value="same_day">Same Day</option>');
+        }
     } else {
         $deliveryTypeSelect.append('<option value="normal">Normal</option>');
     }
 
     $deliveryTypeSelect.trigger('change.select2');
 }
+
 

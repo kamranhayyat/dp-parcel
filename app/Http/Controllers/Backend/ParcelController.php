@@ -12,9 +12,12 @@ use App\Models\Backend\DeliveryCharge;
 use App\Models\Backend\Hub;
 use App\Models\Backend\Merchant;
 use App\Models\Backend\MerchantDeliveryCharge;
+use App\Models\District;
 use App\Models\MerchantShops;
+use App\Repositories\GeneralSettings\GeneralSettingsInterface;
 use App\Repositories\Merchant\MerchantInterface;
 use App\Repositories\MerchantPanel\Shops\ShopsInterface;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use App\Http\Requests\Parcel\StoreRequest;
 use App\Models\Backend\Parcel;
@@ -42,18 +45,21 @@ class ParcelController extends Controller
     protected $shop;
     protected $deliveryman;
     protected $hub;
+    protected $settingsRepo;
     public function __construct(
         ParcelInterface $repo,
         MerchantInterface $merchant,
         ShopsInterface $shop,
         DeliveryManInterface $deliveryman,
-        HubInterface $hub
+        HubInterface $hub,
+        GeneralSettingsInterface $generalSettings
     ) {
         $this->merchant     = $merchant;
         $this->repo         = $repo;
         $this->shop         = $shop;
         $this->deliveryman  = $deliveryman;
         $this->hub          = $hub;
+        $this->settingsRepo          = $generalSettings;
     }
 
     public function index(Request $request)
@@ -86,13 +92,15 @@ class ParcelController extends Controller
      */
     public function create()
     {
+        $settings = $this->settingsRepo->all();
         $merchants          = $this->merchant->all();
         $deliveryCategories = $this->repo->deliveryCategories();
         $deliveryCharges    = $this->repo->deliveryCharges();
         $packagings         = $this->repo->packaging();
         $deliveryTypes      = $this->repo->deliveryTypes();
         $districts          = $this->shop->getAllDistricts();
-        return view('backend.parcel.create', compact('merchants', 'deliveryCategories', 'deliveryCharges', 'deliveryTypes', 'packagings', 'districts'));
+        $defaultParcelTime = $settings->parcel_time;
+        return view('backend.parcel.create', compact('merchants', 'deliveryCategories', 'deliveryCharges', 'deliveryTypes', 'packagings', 'districts', 'defaultParcelTime'));
     }
 
     /**
@@ -396,41 +404,38 @@ class ParcelController extends Controller
     public function deliveryCharge(Request $request)
     {
         if (request()->ajax()) {
+            $pickUpDistrict = District::query()->where('id', $request->pickup_district_id)->first();
+            $deliveryDistrict = District::query()->where('id', $request->destination_district_id)->first();
+            $subCategory = null;
 
-            if ($request->merchant_id && $request->category_id && $request->weight != '0' && $request->delivery_type_id) {
-                $charges = MerchantDeliveryCharge::where([
-                    'merchant_id' => $request->merchant_id,
-                    'category_id' => $request->category_id,
-                    'weight' => $request->weight
-                ])->first();
-
-                if (blank($charges)) {
-                    $charges = DeliveryCharge::where(['category_id' => $request->category_id])->first();
-                }
-            } else {
-                $charges     = MerchantDeliveryCharge::where(['merchant_id' => $request->merchant_id, 'category_id' => $request->category_id, 'weight' => $request->weight])->first();
-                if (blank($charges)) {
-                    $charges = DeliveryCharge::where(['category_id' => $request->category_id])->first();
+            if($request->delivery_type_id === 'normal') {
+                if($pickUpDistrict->id === $deliveryDistrict->id) {
+                    $subCategory = 'same_sector';
+                } else if($pickUpDistrict->id !== $deliveryDistrict->id &&
+                    $pickUpDistrict->number === $deliveryDistrict->number) {
+                    $subCategory = 'within_sector';
+                } else if($pickUpDistrict->id !== $deliveryDistrict->id &&
+                    $pickUpDistrict->number !== $deliveryDistrict->number) {
+                    $subCategory = 'different_sector';
                 }
             }
 
-            if (!blank($charges)) {
-                if ($request->delivery_type_id == '1') {
-                    $chargeAmount = $charges->same_day;
-                } elseif ($request->delivery_type_id == '2') {
-                    $chargeAmount = $charges->next_day;
-                } elseif ($request->delivery_type_id == '3') {
-                    $chargeAmount = $charges->sub_city;
-                } elseif ($request->delivery_type_id == '4') {
-                    $chargeAmount = $charges->outside_city;
-                } else {
-                    $chargeAmount = 0;
-                }
-                return $chargeAmount;
+
+            $deliveryCharge = DeliveryCharge::query()
+                ->where('category', $request->delivery_type_id)
+                ->when($request->delivery_type_id == 'normal', function ($query) use ($subCategory) {
+                    return $query->where('sub_category', $subCategory);
+                })
+                ->first();
+
+            $deliveryChargeOtherKgRate = 0;
+            $deliveryChargeFirstKgRate = $deliveryCharge->first_kg * $request->delivery_distance;
+            if($request->weight > 1) {
+                $deliveryChargeOtherKgRate = ($request->weight - 1) * $deliveryCharge->other_kg;
             }
-            return 0;
+
+            return  $deliveryChargeFirstKgRate + $deliveryChargeOtherKgRate;
         }
-        return 0;
     }
 
 

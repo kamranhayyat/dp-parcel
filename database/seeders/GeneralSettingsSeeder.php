@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Backend\GeneralSettings;
@@ -39,6 +40,7 @@ class GeneralSettingsSeeder extends Seeder
         $row->current_version      = '1';
         $row->primary_color        = '#0138a8';
         $row->text_color           = '#ffffff';
+        $row->parcel_time           = \Illuminate\Support\Carbon::parse('3pm')->format('H:i');
         $row->save();
         return $row;
     }

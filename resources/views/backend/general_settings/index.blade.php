@@ -33,6 +33,13 @@
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
+                                    <label for="parcel_time">{{ __('Parcel default time') }}</label>
+                                    <input id="parcel_time" type="time" name="parcel_time" data-parsley-trigger="change" placeholder="{{ __('Enter parcel default time') }}" autocomplete="off" class="form-control @error('parcel_time') is-invalid @enderror" value="{{ $settings->parcel_time }}" require>
+                                    @error('parcel_time')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
                                     <label for="name">{{ __('levels.application_name') }}</label>
                                     <input id="name" type="text" name="name" data-parsley-trigger="change" placeholder="{{ __('placeholder.Enter_name') }}" autocomplete="off" class="form-control @error('name') is-invalid @enderror" value="{{ $settings->name }}" require>
                                     @error('name')
@@ -43,7 +50,7 @@
                                     <label for="phone">{{ __('levels.phone') }}</label>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">{{ mobile_prefix() }}</span>
-                                        <div class="form-floating"> 
+                                        <div class="form-floating">
                                             <input id="phone" type="text" name="phone" data-parsley-trigger="change" placeholder="{{ __('placeholder.Enter_phone') }}" autocomplete="off" class="form-control input-end-redius @error('phone') is-invalid @enderror" value="{{ $settings->phone }}" require>
                                         </div>
                                     </div>
@@ -126,7 +133,7 @@
                                             @enderror
                                         </div>
                                         <div class="col-6 text-right  pt-3">
-                                            <div class="bg-primary p-3"> 
+                                            <div class="bg-primary p-3">
                                                 <img src="{{$settings->light_logo_image}}" alt="user" class="rounded mt-3" width="100%"  style="object-fit: contain">
                                             </div>
                                         </div>
@@ -146,8 +153,8 @@
                                         </div>
                                     </div>
                                 </div>
-                               
-                          
+
+
                             </div>
                             <div class="col-md-6">
                                 <div class="row">
@@ -159,7 +166,7 @@
                                                 <small class="text-danger mt-2">{{ $message }}</small>
                                             @enderror
                                         </div>
-                                    </div> 
+                                    </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="text_color">{{ __('levels.text_color') }}</label>
@@ -168,7 +175,7 @@
                                                 <small class="text-danger mt-2">{{ $message }}</small>
                                             @enderror
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
                             @if(hasPermission('general_settings_update'))

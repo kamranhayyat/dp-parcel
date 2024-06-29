@@ -7,7 +7,7 @@ $(document).ready(function(){
     $( "#delivery_type_id" ).select2();
 
         $( "#merchant_id" ).select2({
-      
+
         ajax: {
             url: merchantUrl,
             type: "POST",
@@ -89,6 +89,7 @@ function shop(url){
             $('#pickup_address').val(shop.address);
             $('#pickup_lat').val(shop.merchant_lat);
             $('#pickup_long').val(shop.merchant_long);
+            $('#pickup_district_id').val(shop.district_id);
         }
     });
 }
@@ -209,15 +210,25 @@ $(document).on('keyup change', '#cash_collection', function () {
 function deliveryCharge() {
     var merchant_id            = $("select#merchant_id option").filter(":selected").val();
     var category_id        = $("select#category_id option").filter(":selected").val();
-    var weight             = $("select#weightID option").filter(":selected").val();
+    var weight             = $("#weight").val();
     var delivery_type_id   = $("select#delivery_type_id option").filter(":selected").val();
+    var destination_district_id   = $("select#districts option").filter(":selected").val();
+    var pickup_district_id   = $("#pickup_district_id").val();
+    var delivery_distance   = $('#delivery_distance').val();
 
     if(merchant_id !=='' && category_id !=='' && delivery_type_id !==''){
 
         $.ajax({
             type : 'POST',
             url : deliverChargeUrl,
-            data : {'merchant_id': merchant_id,'category_id':category_id,'weight':weight,'delivery_type_id':delivery_type_id},
+            data : {
+                'merchant_id': merchant_id,
+                'weight':weight,
+                'delivery_type_id':delivery_type_id,
+                'pickup_district_id':pickup_district_id,
+                'destination_district_id':destination_district_id,
+                'delivery_distance': delivery_distance
+            },
             dataType : "json",
             success : function (data) {
 

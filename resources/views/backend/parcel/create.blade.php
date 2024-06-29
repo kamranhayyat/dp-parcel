@@ -44,6 +44,7 @@
 
                                     </select>
                                     {{-- cod charge calculation --}}
+                                    <input type="hidden" id="default_parcel_time" value="{{$defaultParcelTime}}" />
                                     <input type="hidden" id="merchanturl" data-url="{{ route('get.merchant.cod') }}" />
                                     <input type="hidden" id="inside_city" value="0" />
                                     <input type="hidden" id="sub_city" value="0" />
@@ -62,7 +63,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-12 col-md-6">
-                                    <label for="districts">{{ __('Districts') }}</label>
+                                    <label for="districts">{{ __('Delivery Territory') }}</label>
                                     <select style="width: 100%" id="districts" class="form-control" name="districts">
                                         @foreach($districts as $district)
                                             <option value="{{$district->id}}">{{$district->sector}}</option>
@@ -93,6 +94,8 @@
 
                                     <input type="hidden" id="pickup_lat" name="pickup_lat" value="">
                                     <input type="hidden" id="pickup_long" name="pickup_long" value="">
+                                    <input type="hidden" id="pickup_district_id" name="pickup_district_id" value="">
+                                    <input type="hidden" id="delivery_distance" name="delivery_distance" value="">
 
                                     @error('pickup_address')
                                         <small class="text-danger mt-2">{{ $message }}</small>
@@ -134,14 +137,10 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group col-12 col-md-6" id="categoryWeight">
-                                    <label for="weightID">{{ __('parcel.weight') }}</label> <span
+                                <div class="form-group col-12 col-md-6">
+                                    <label for="number">{{ __('parcel.weight') }}</label> <span
                                         class="text-danger">*</span>
-                                    <select style="width: 100%" id="weightID" class="form-control select2"
-                                        name="weight">
-                                        <option value=""> {{ __('Select Weight') }}</option>
-
-                                    </select>
+                                    <input type="number" name="weight" id="weight" class="form-control" required>
                                     @error('weight')
                                         <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
