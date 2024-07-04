@@ -5,13 +5,10 @@ $("#category").on('change', function () {
     var selectedSlug = $("#category option:selected").data('value');
 
     if(selectedSlug === 'same_day' || selectedSlug === 'express') {
-        $("#time_group").removeClass('d-none');
         $("#sub-cat-group").addClass('d-none');
     } else if(selectedSlug === 'normal') {
         $("#sub-cat-group").removeClass('d-none');
-        $("#time_group").addClass('d-none');
     } else {
-        $("#time_group").addClass('d-none');
         $("#sub-cat-group").addClass('d-none');
     }
 

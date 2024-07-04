@@ -35,7 +35,7 @@ class StoreRequest extends FormRequest
             ],
             'sub_category' => [
                 'required_if:category,normal',
-                'in:same_sector,within_sector,different_sector',
+                'in:same_sector,different_sector,Colombo 1-15,Colombo Suburbs,Greater Colombo',
                 'nullable',
                 Rule::unique('delivery_charges')->where(function (Builder $query) {
                     return $query->where('category', $this->input('category'));

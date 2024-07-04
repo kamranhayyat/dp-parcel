@@ -111,7 +111,6 @@ class ParcelController extends Controller
      */
     public function store(StoreRequest $request)
     {
-
         //wallet use checking
         $merchant      = Merchant::find($request->merchant_id);
         if ($merchant->wallet_use_activation == Status::ACTIVE) :
@@ -409,12 +408,11 @@ class ParcelController extends Controller
             $subCategory = null;
 
             if($request->delivery_type_id === 'normal') {
-                if($pickUpDistrict->id === $deliveryDistrict->id) {
+                if($request->pickup_district_id === $request->destination_district_id && $pickUpDistrict->number != "1") {
                     $subCategory = 'same_sector';
-                } else if($pickUpDistrict->id !== $deliveryDistrict->id &&
-                    $pickUpDistrict->number === $deliveryDistrict->number) {
-                    $subCategory = 'within_sector';
-                } else if($pickUpDistrict->id !== $deliveryDistrict->id &&
+                } else if($pickUpDistrict->number == "1" && $deliveryDistrict->number == "1") {
+                    $subCategory = $deliveryDistrict->sector;
+                } else if($request->pickup_district_id !== $request->destination_district_id &&
                     $pickUpDistrict->number !== $deliveryDistrict->number) {
                     $subCategory = 'different_sector';
                 }

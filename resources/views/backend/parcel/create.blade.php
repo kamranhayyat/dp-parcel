@@ -154,6 +154,7 @@
                                         name="delivery_type_id" required="">
                                         <option value=""> {{ __('menus.select') }} {{ __('menus.delivery_type') }}
                                         </option>
+                                        <option value="normal">Normal</option>
                                     </select>
                                     @error('delivery_type_id')
                                         <small class="text-danger mt-2">{{ $message }}</small>

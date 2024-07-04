@@ -87,7 +87,6 @@
                                     <th>{{ __('levels.sub_category') }}</th>
                                     <th>{{ __('levels.first_kg') }}</th>
                                     <th>{{ __('levels.other_kg') }}</th>
-                                    <th>{{ __('levels.time') }}</th>
                                     <th>{{ __('levels.status') }}</th>
                                     @if(hasPermission('delivery_charge_update') == true || hasPermission('delivery_charge_delete') == true)
                                     <th>{{ __('levels.actions') }}</th>
@@ -103,7 +102,6 @@
                                         <td>{!! $delivery_charge->category == 'normal' ? $delivery_charge->sub_category : '' !!}</td>
                                     <td>{!! $delivery_charge->first_kg !!}</td>
                                     <td>{!! $delivery_charge->other_kg !!}</td>
-                                    <td>{!! in_array($delivery_charge->category, ['same_day', 'express']) ? $delivery_charge->time : '' !!}</td>
                                     <td>{!! $delivery_charge->my_status !!}</td>
                                     @if(hasPermission('delivery_charge_update') == true || hasPermission('delivery_charge_delete') == true)
                                     <td>

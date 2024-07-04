@@ -296,8 +296,6 @@ function updateDeliveryOptions(lat, lng) {
             $deliveryTypeSelect.append('<option value="express">Express</option>');
             $deliveryTypeSelect.append('<option value="same_day">Same Day</option>');
         }
-    } else {
-        $deliveryTypeSelect.append('<option value="normal">Normal</option>');
     }
 
     $deliveryTypeSelect.trigger('change.select2');
