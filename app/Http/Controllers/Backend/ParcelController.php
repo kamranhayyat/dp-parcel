@@ -403,6 +403,23 @@ class ParcelController extends Controller
     public function deliveryCharge(Request $request)
     {
         if (request()->ajax()) {
+            $fields = [
+                'merchant_id' => 'Merchant ID should not be empty',
+                'weight' => 'Weight should not be empty',
+                'delivery_type_id' => 'Delivery type should not be empty',
+                'destination_district_id' => 'Destination district should not be empty',
+                'delivery_distance' => 'Delivery distance should not be empty',
+            ];
+        
+            foreach ($fields as $field => $message) {
+                if ($request->input($field) == null) {
+                    return response()->json([
+                        'field' => $field,
+                        'message' => $message,
+                    ], 400);
+                }
+            }
+    
             $pickUpDistrict = District::query()->where('id', $request->pickup_district_id)->first();
             $deliveryDistrict = District::query()->where('id', $request->destination_district_id)->first();
             $subCategory = null;
@@ -425,6 +442,10 @@ class ParcelController extends Controller
                     return $query->where('sub_category', $subCategory);
                 })
                 ->first();
+                
+            if (!$deliveryCharge) {
+                return response()->json(['error' => 'Delivery charge not found'], 404);
+            }
 
             $deliveryChargeOtherKgRate = 0;
             $deliveryChargeFirstKgRate = $deliveryCharge->first_kg * $request->delivery_distance;

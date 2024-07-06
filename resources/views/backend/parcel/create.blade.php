@@ -43,6 +43,7 @@
                                         </option>
 
                                     </select>
+                                    <span id="merchant_id_error" class="error-message text-danger mt-2"></span>
                                     {{-- cod charge calculation --}}
                                     <input type="hidden" id="default_parcel_time" value="{{$defaultParcelTime}}" />
                                     <input type="hidden" id="merchanturl" data-url="{{ route('get.merchant.cod') }}" />
@@ -72,6 +73,7 @@
                                     @error('shop_id')
                                     <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
+                                    <span id="destination_district_id_error" class="error-message text-danger mt-2"></span>
                                 </div>
                                 <div class="form-group col-12 col-md-6">
                                     <label for="pickup_phone">{{ __('parcel.pickup_phone') }}</label>
@@ -144,6 +146,7 @@
                                     @error('weight')
                                         <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
+                                    <span id="weight_error" class="error-message text-danger mt-2"></span>
                                 </div>
 
 
@@ -159,6 +162,7 @@
                                     @error('delivery_type_id')
                                         <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
+                                    <span id="delivery_type_id_error" class="error-message text-danger mt-2"></span>
                                 </div>
 
 
@@ -196,6 +200,7 @@
                                             <input id="autocomplete-input" type="text" name="customer_address"
                                                 class="recipe-search2 form-control" placeholder="Location Here!"
                                                 required="">
+                                            <span id="delivery_distance_error" class="error-message text-danger mt-2"></span>
                                             <a href="javascript:void(0)" class="submit-btn btn current-location"
                                                 id="locationIcon" onclick="getLocation()">
                                                 <i class="fa fa-crosshairs"></i>

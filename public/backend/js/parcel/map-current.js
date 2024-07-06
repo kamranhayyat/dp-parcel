@@ -290,12 +290,16 @@ function updateDeliveryOptions(lat, lng) {
     if (dist <= 15) {
         if (!isAfterDefaultTime) {
             $deliveryTypeSelect.append('<option value="express">Express</option>');
+            $deliveryTypeSelect.append('<option value="normal">Normal</option>');
         }
     } else if (dist <= 50) {
         if (!isAfterDefaultTime) {
             $deliveryTypeSelect.append('<option value="express">Express</option>');
             $deliveryTypeSelect.append('<option value="same_day">Same Day</option>');
+            $deliveryTypeSelect.append('<option value="normal">Normal</option>');
         }
+    } else {
+         $deliveryTypeSelect.append('<option value="normal">Normal</option>');
     }
 
     $deliveryTypeSelect.trigger('change.select2');

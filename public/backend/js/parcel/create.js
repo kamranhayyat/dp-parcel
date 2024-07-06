@@ -230,14 +230,32 @@ function deliveryCharge() {
                 'delivery_distance': delivery_distance
             },
             dataType : "json",
+            beforeSend: function() {
+                clearErrorMessages();
+            },
             success : function (data) {
-
                 $('#deliveryChargeAmount').text(data);
                 totalSum();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status === 400) {
+                    var response = jqXHR.responseJSON;
+                    var field = response.field;
+                    var message = response.message;
+                    
+                    $('#' + field + '_error').text(message);
+                } else {
+                    // Handle other errors
+                    console.error('Unexpected error:', errorThrown);
+                }
             }
         });
     }
 
+}
+
+function clearErrorMessages() {
+    $('.error-message').text('');
 }
 
 function totalSum() {
