@@ -404,13 +404,12 @@ class ParcelController extends Controller
     {
         if (request()->ajax()) {
             $fields = [
-                'merchant_id' => 'Merchant ID should not be empty',
                 'weight' => 'Weight should not be empty',
                 'delivery_type_id' => 'Delivery type should not be empty',
                 'destination_district_id' => 'Destination district should not be empty',
                 'delivery_distance' => 'Delivery distance should not be empty',
             ];
-        
+
             foreach ($fields as $field => $message) {
                 if ($request->input($field) == null) {
                     return response()->json([
@@ -419,7 +418,7 @@ class ParcelController extends Controller
                     ], 400);
                 }
             }
-    
+
             $pickUpDistrict = District::query()->where('id', $request->pickup_district_id)->first();
             $deliveryDistrict = District::query()->where('id', $request->destination_district_id)->first();
             $subCategory = null;
@@ -442,7 +441,7 @@ class ParcelController extends Controller
                     return $query->where('sub_category', $subCategory);
                 })
                 ->first();
-                
+
             if (!$deliveryCharge) {
                 return response()->json(['error' => 'Delivery charge not found'], 404);
             }

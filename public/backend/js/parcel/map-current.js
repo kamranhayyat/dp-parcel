@@ -277,8 +277,6 @@ function updateDeliveryOptions(lat, lng) {
     var defaultParcelTime = $('#default_parcel_time').val(); // Format: "15:00:00"
 
     var currentTime = new Date();
-    currentTime.setHours(14);
-    currentTime.setMinutes(0);
 
     var [defaultHours, defaultMinutes] = defaultParcelTime.split(':').map(Number);
 

@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Imports\ParcelImport;
 use App\Models\Backend\DeliveryCharge;
 use App\Models\Backend\MerchantDeliveryCharge;
+use App\Models\District;
 use App\Models\MerchantShops;
+use App\Repositories\GeneralSettings\GeneralSettingsInterface;
 use App\Repositories\Merchant\MerchantInterface;
 use App\Repositories\MerchantPanel\MerchantParcel\MerchantParcelInterface;
 use App\Repositories\MerchantPanel\Shops\ShopsInterface;
@@ -32,11 +34,13 @@ class MerchantParcelController extends Controller
     protected $merchant;
     protected $repo;
     protected $shop;
-    public function __construct(MerchantParcelInterface $repo, MerchantInterface $merchant, ShopsInterface $shop)
+    protected $settingsRepo;
+    public function __construct(MerchantParcelInterface $repo, MerchantInterface $merchant, ShopsInterface $shop, GeneralSettingsInterface $generalSettings)
     {
         $this->merchant = $merchant;
         $this->repo = $repo;
         $this->shop = $shop;
+        $this->settingsRepo          = $generalSettings;
     }
     public function index(Request $request)
     {
@@ -67,6 +71,7 @@ class MerchantParcelController extends Controller
 
     public function create()
     {
+        $settings = $this->settingsRepo->all();
         $userID = Auth::user()->id;
         $merchant = $this->repo->getMerchant($userID);
         $shops = $this->repo->getShops($merchant->id);
@@ -75,7 +80,9 @@ class MerchantParcelController extends Controller
         $deliveryCharges = $this->repo->deliveryCharges();
         $packagings = $this->repo->packaging();
         $deliveryTypes      = $this->repo->deliveryTypes();
-        return view('backend.merchant_panel.parcel.create',compact('merchant','merchantShop','deliveryTypes','shops','deliveryCategories','deliveryCharges','packagings'));
+        $districts          = $this->shop->getAllDistricts();
+        $defaultParcelTime = $settings->parcel_time;
+        return view('backend.merchant_panel.parcel.create',compact('merchant','merchantShop','deliveryTypes','shops','deliveryCategories','deliveryCharges','packagings', 'districts', 'defaultParcelTime'));
     }
 
     public function store(StoreRequest $request)
@@ -272,35 +279,57 @@ class MerchantParcelController extends Controller
     public function deliveryCharge(Request $request)
     {
         if (request()->ajax()) {
-            if ($request->merchant_id && $request->category_id && $request->weight !='0' && $request->delivery_type_id) {
-                $charges = MerchantDeliveryCharge::where(['merchant_id'=>$request->merchant_id,'category_id'=>$request->category_id,'weight'=>$request->weight])->first();
-                if (blank($charges)) {
-                    $charges = DeliveryCharge::where(['category_id'=>$request->category_id])->first();
-                }
-            } else {
-                $charges = MerchantDeliveryCharge::where(['merchant_id'=>$request->merchant_id,'category_id'=>$request->category_id,'weight'=>$request->weight])->first();
-                if (blank($charges)) {
-                    $charges = DeliveryCharge::where(['category_id'=>$request->category_id])->first();
+            $fields = [
+                'weight' => 'Weight should not be empty',
+                'delivery_type_id' => 'Delivery type should not be empty',
+                'destination_district_id' => 'Destination district should not be empty',
+                'delivery_distance' => 'Delivery distance should not be empty',
+            ];
+
+            foreach ($fields as $field => $message) {
+                if ($request->input($field) == null) {
+                    return response()->json([
+                        'field' => $field,
+                        'message' => $message,
+                    ], 400);
                 }
             }
 
-            if (!blank($charges)) {
-                if($request->delivery_type_id == '1'){
-                    $chargeAmount = $charges->same_day;
-                }elseif ($request->delivery_type_id == '2') {
-                    $chargeAmount = $charges->next_day;
-                }elseif ($request->delivery_type_id == '3') {
-                    $chargeAmount = $charges->sub_city;
-                }elseif ($request->delivery_type_id == '4') {
-                    $chargeAmount = $charges->outside_city;
-                }else {
-                    $chargeAmount = 0;
+            $pickUpDistrict = District::query()->where('id', $request->pickup_district_id)->first();
+            $deliveryDistrict = District::query()->where('id', $request->destination_district_id)->first();
+            $subCategory = null;
+
+            if($request->delivery_type_id === 'normal') {
+                if($request->pickup_district_id === $request->destination_district_id && $pickUpDistrict->number != "1") {
+                    $subCategory = 'same_sector';
+                } else if($pickUpDistrict->number == "1" && $deliveryDistrict->number == "1") {
+                    $subCategory = $deliveryDistrict->sector;
+                } else if($request->pickup_district_id !== $request->destination_district_id &&
+                    $pickUpDistrict->number !== $deliveryDistrict->number) {
+                    $subCategory = 'different_sector';
                 }
-                return $chargeAmount;
             }
-            return 0;
+
+
+            $deliveryCharge = DeliveryCharge::query()
+                ->where('category', $request->delivery_type_id)
+                ->when($request->delivery_type_id == 'normal', function ($query) use ($subCategory) {
+                    return $query->where('sub_category', $subCategory);
+                })
+                ->first();
+
+            if (!$deliveryCharge) {
+                return response()->json(['error' => 'Delivery charge not found'], 404);
+            }
+
+            $deliveryChargeOtherKgRate = 0;
+            $deliveryChargeFirstKgRate = $deliveryCharge->first_kg * $request->delivery_distance;
+            if($request->weight > 1) {
+                $deliveryChargeOtherKgRate = ($request->weight - 1) * $deliveryCharge->other_kg;
+            }
+
+            return  $deliveryChargeFirstKgRate + $deliveryChargeOtherKgRate;
         }
-        return 0;
     }
 
     public function deliveryWeight(Request $request)

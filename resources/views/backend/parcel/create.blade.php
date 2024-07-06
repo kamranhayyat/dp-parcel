@@ -149,7 +149,6 @@
                                     <span id="weight_error" class="error-message text-danger mt-2"></span>
                                 </div>
 
-
                                 <div class="form-group col-12 col-md-6">
                                     <label for="delivery_type_id">{{ __('parcel.delivery_type') }}</label> <span
                                         class="text-danger">*</span>
