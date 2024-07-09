@@ -4,7 +4,7 @@ $(document).ready(function(){
     $( "#shopID" ).select2();
     $( "#category_id" ).select2();
     $( "#weightID" ).select2();
-    $( "#delivery_type_id" ).select2();
+    //$( "#delivery_type_id" ).select2();
     deliveryCharge();
 });
 
@@ -57,26 +57,26 @@ $(document).on('change', '#category_id', function () {
 $(document).on('change', '#delivery_type_id', function () {
     deliveryCharge();
 
-     //cod charge calculation
-     var delivery_type   = $(this).val();
-     var cash_collection =  parseFloat($("#cash_collection").val());
-     if(cash_collection == '' || isNaN(cash_collection)){
-         cash_collection = 0;
-     }
-         var type = 0;
-         if(delivery_type == 1 || delivery_type == 2){
-             type = $("#inside_city").val();
-         }else if(delivery_type == 3){
-             type = $("#sub_city").val();
-         }else if(delivery_type == 4){
-             type = $("#outside_city").val();
-         }else{
-             type = 0;
-         }
-         var codAmount       = percentage(cash_collection,type);
+    //cod charge calculation
+    var delivery_type   = $(this).val();
+    var cash_collection =  parseFloat($("#cash_collection").val());
+    if(cash_collection == '' || isNaN(cash_collection)){
+        cash_collection = 0;
+    }
+    var type = 0;
+    if(delivery_type == 1 || delivery_type == 2){
+        type = $("#inside_city").val();
+    }else if(delivery_type == 3){
+        type = $("#sub_city").val();
+    }else if(delivery_type == 4){
+        type = $("#outside_city").val();
+    }else{
+        type = 0;
+    }
+    var codAmount       = percentage(cash_collection,type);
 
-         $('#codChargeAmount').text(codAmount.toFixed(2));
-     //end cod charge calculation
+    $('#codChargeAmount').text(codAmount.toFixed(2));
+    //end cod charge calculation
 
 });
 
@@ -118,7 +118,7 @@ function processCheck(event) {
 
 function percentage(totalAmount,percentageAmount) {
 
-     return totalAmount * (percentageAmount / 100);
+    return totalAmount * (percentageAmount / 100);
 }
 
 $(document).on('keyup change', '#cash_collection', function () {
@@ -147,61 +147,84 @@ $(document).on('keyup change', '#cash_collection', function () {
 });
 
 function deliveryCharge() {
-    var merchant_id            = $("#merchant_id").val();
+    var merchant_id            = $("select#merchant_id option").filter(":selected").val();
     var category_id        = $("select#category_id option").filter(":selected").val();
-    var weight             = $("select#weightID option").filter(":selected").val();
+    var weight             = $("#weight").val();
     var delivery_type_id   = $("select#delivery_type_id option").filter(":selected").val();
+    var destination_district_id   = $("select#districts option").filter(":selected").val();
+    var pickup_district_id   = $("#pickup_district_id").val();
+    var delivery_distance   = $('#delivery_distance').val();
 
     if(merchant_id !=='' && category_id !=='' && delivery_type_id !==''){
 
         $.ajax({
             type : 'POST',
             url : deliverChargeUrl,
-            data : {'merchant_id': merchant_id,'category_id':category_id,'weight':weight,'delivery_type_id':delivery_type_id},
+            data : {
+                'merchant_id': merchant_id,
+                'weight':weight,
+                'delivery_type_id':delivery_type_id,
+                'pickup_district_id':pickup_district_id,
+                'destination_district_id':destination_district_id,
+                'delivery_distance': delivery_distance
+            },
             dataType : "json",
+            beforeSend: function() {
+                clearErrorMessages();
+            },
             success : function (data) {
-                console.log(data);
-                $('#deliveryChargeAmount').text(parseFloat(data));
+                $('#deliveryChargeAmount').text(data);
                 totalSum();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status === 400) {
+                    var response = jqXHR.responseJSON;
+                    var field = response.field;
+                    var message = response.message;
+
+                    $('#' + field + '_error').text(message);
+                } else {
+                    // Handle other errors
+                    console.error('Unexpected error:', errorThrown);
+                }
             }
         });
     }
 
 }
 
-
-
-
-
+function clearErrorMessages() {
+    $('.error-message').text('');
+}
 
 function totalSum() {
     merchant();
-   var totalCashCollection          =  parseFloat($('#totalCashCollection').text());
-   var deliveryChargeAmount         =  parseFloat($('#deliveryChargeAmount').text());
-   var codChargeAmount              =  parseFloat($('#codChargeAmount').text());
-   var vatTex                       = parseFloat($('#merchantVat').val());
-   var merchantCodCharge            = parseFloat( $('#merchantCodCharge').val());
-   var liquidFragileAmount          =  parseFloat($('#liquidFragileAmount').text());
-   var packagingAmount              =  parseFloat($('#packagingAmount').text());
+    var totalCashCollection          =  parseFloat($('#totalCashCollection').text());
+    var deliveryChargeAmount         =  parseFloat($('#deliveryChargeAmount').text());
+    var codChargeAmount              =  parseFloat($('#codChargeAmount').text());
+    var vatTex                       = parseFloat($('#merchantVat').val());
+    var merchantCodCharge            = parseFloat( $('#merchantCodCharge').val());
+    var liquidFragileAmount          =  parseFloat($('#liquidFragileAmount').text());
+    var packagingAmount              =  parseFloat($('#packagingAmount').text());
 
-   var totalAmount = (deliveryChargeAmount+codChargeAmount+liquidFragileAmount+packagingAmount);
+    var totalAmount = (deliveryChargeAmount+codChargeAmount+liquidFragileAmount+packagingAmount);
     var vat = percentage(totalAmount, vatTex);
     $('#VatAmount').text(vat.toFixed(2));
     $('#totalDeliveryChargeAmount').text(totalAmount.toFixed(2));
     totalAmount +=vat;
-   var totalCurrentAmount = (totalCashCollection-totalAmount);
+    var totalCurrentAmount = (totalCashCollection-totalAmount);
 
-   $('#netPayable').text(totalAmount.toFixed(2));
+    $('#netPayable').text(totalAmount.toFixed(2));
 
 //    $('#totalDeliveryChargeAmount').text(totalAmount.toFixed(2));
-   $('#currentPayable').text(totalCurrentAmount.toFixed(2));
+    $('#currentPayable').text(totalCurrentAmount.toFixed(2));
 
-   var totalDeliveryChargeAmount    =  parseFloat($('#totalDeliveryChargeAmount').text());
-   var currentPayable               =  parseFloat($('#currentPayable').text());
+    var totalDeliveryChargeAmount    =  parseFloat($('#totalDeliveryChargeAmount').text());
+    var currentPayable               =  parseFloat($('#currentPayable').text());
     var VatAmount                    =  parseFloat($('#VatAmount').text());
 
-   var obj = {'vatTex':vatTex,'merchantCodCharge':merchantCodCharge,'totalCashCollection':totalCashCollection,'deliveryChargeAmount':deliveryChargeAmount,'codChargeAmount':codChargeAmount,'VatAmount':VatAmount,'liquidFragileAmount':liquidFragileAmount,'packagingAmount':packagingAmount,'totalDeliveryChargeAmount':totalDeliveryChargeAmount,'currentPayable':currentPayable}
-   $('#chargeDetails').val(JSON.stringify(obj));
+    var obj = {'vatTex':vatTex,'merchantCodCharge':merchantCodCharge,'totalCashCollection':totalCashCollection,'deliveryChargeAmount':deliveryChargeAmount,'codChargeAmount':codChargeAmount,'VatAmount':VatAmount,'liquidFragileAmount':liquidFragileAmount,'packagingAmount':packagingAmount,'totalDeliveryChargeAmount':totalDeliveryChargeAmount,'currentPayable':currentPayable}
+    $('#chargeDetails').val(JSON.stringify(obj));
 
 }
 

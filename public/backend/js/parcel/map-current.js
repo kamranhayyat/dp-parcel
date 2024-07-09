@@ -277,8 +277,6 @@ function updateDeliveryOptions(lat, lng) {
     var defaultParcelTime = $('#default_parcel_time').val(); // Format: "15:00:00"
 
     var currentTime = new Date();
-    currentTime.setHours(14);
-    currentTime.setMinutes(0);
 
     var [defaultHours, defaultMinutes] = defaultParcelTime.split(':').map(Number);
 
@@ -291,16 +289,19 @@ function updateDeliveryOptions(lat, lng) {
         if (!isAfterDefaultTime) {
             $deliveryTypeSelect.append('<option value="express">Express</option>');
         }
-    } else if (dist <= 50) {
-        if (!isAfterDefaultTime) {
-            $deliveryTypeSelect.append('<option value="express">Express</option>');
-            $deliveryTypeSelect.append('<option value="same_day">Same Day</option>');
-        }
-    } else {
-        $deliveryTypeSelect.append('<option value="normal">Normal</option>');
     }
 
-    $deliveryTypeSelect.trigger('change.select2');
+    if (dist <= 50) {
+        if (!isAfterDefaultTime) {
+            $deliveryTypeSelect.append('<option value="same_day">Same Day</option>');
+        }
+    }
+
+
+    $deliveryTypeSelect.append('<option value="normal">Normal</option>');
+
+
+    //$deliveryTypeSelect.trigger('change.select2');
 }
 
 
