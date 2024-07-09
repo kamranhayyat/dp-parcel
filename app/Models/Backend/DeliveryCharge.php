@@ -87,8 +87,10 @@ class DeliveryCharge extends Model
      {
          return [
              'same_sector' => 'Same District',
-             'within_sector' => 'Within District',
              'different_sector' => 'Different District',
+             'Colombo 1-15' => 'Colombo 1-15 to Colombo 1-15 ',
+             'Colombo Suburbs' => 'Colombo 1-15 to Colombo Suburbs',
+             'Greater Colombo' => 'Colombo 1-15 to Greater Colombo'
          ];
      }
 }

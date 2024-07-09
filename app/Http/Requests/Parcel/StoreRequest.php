@@ -25,8 +25,8 @@ class StoreRequest extends FormRequest
     {
         return [
             'merchant_id'       => ['required','numeric'],
-            'category_id'       => ['required','numeric'],
-            'delivery_type_id'  => ['required','numeric'],
+            'delivery_type_id'  => ['required','string'],
+            'weight'            => ['required'],
             'customer_name'     => ['required','string','max:191'],
             'customer_address'  => ['required','string','max:191'],
             'customer_phone'    => ['required','string','max:191'],

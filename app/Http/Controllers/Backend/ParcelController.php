@@ -111,7 +111,6 @@ class ParcelController extends Controller
      */
     public function store(StoreRequest $request)
     {
-
         //wallet use checking
         $merchant      = Merchant::find($request->merchant_id);
         if ($merchant->wallet_use_activation == Status::ACTIVE) :
@@ -404,17 +403,32 @@ class ParcelController extends Controller
     public function deliveryCharge(Request $request)
     {
         if (request()->ajax()) {
+            $fields = [
+                'weight' => 'Weight should not be empty',
+                'delivery_type_id' => 'Delivery type should not be empty',
+                'destination_district_id' => 'Destination district should not be empty',
+                'delivery_distance' => 'Delivery distance should not be empty',
+            ];
+
+            foreach ($fields as $field => $message) {
+                if ($request->input($field) == null) {
+                    return response()->json([
+                        'field' => $field,
+                        'message' => $message,
+                    ], 400);
+                }
+            }
+
             $pickUpDistrict = District::query()->where('id', $request->pickup_district_id)->first();
             $deliveryDistrict = District::query()->where('id', $request->destination_district_id)->first();
             $subCategory = null;
 
             if($request->delivery_type_id === 'normal') {
-                if($pickUpDistrict->id === $deliveryDistrict->id) {
+                if($request->pickup_district_id === $request->destination_district_id && $pickUpDistrict->number != "1") {
                     $subCategory = 'same_sector';
-                } else if($pickUpDistrict->id !== $deliveryDistrict->id &&
-                    $pickUpDistrict->number === $deliveryDistrict->number) {
-                    $subCategory = 'within_sector';
-                } else if($pickUpDistrict->id !== $deliveryDistrict->id &&
+                } else if($pickUpDistrict->number == "1" && $deliveryDistrict->number == "1") {
+                    $subCategory = $deliveryDistrict->sector;
+                } else if($request->pickup_district_id !== $request->destination_district_id &&
                     $pickUpDistrict->number !== $deliveryDistrict->number) {
                     $subCategory = 'different_sector';
                 }
@@ -427,6 +441,10 @@ class ParcelController extends Controller
                     return $query->where('sub_category', $subCategory);
                 })
                 ->first();
+
+            if (!$deliveryCharge) {
+                return response()->json(['error' => 'Delivery charge not found'], 404);
+            }
 
             $deliveryChargeOtherKgRate = 0;
             $deliveryChargeFirstKgRate = $deliveryCharge->first_kg * $request->delivery_distance;
