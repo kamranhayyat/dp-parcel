@@ -155,41 +155,38 @@ function deliveryCharge() {
     var pickup_district_id   = $("#pickup_district_id").val();
     var delivery_distance   = $('#delivery_distance').val();
 
-    if(merchant_id !=='' && category_id !=='' && delivery_type_id !==''){
+    $.ajax({
+        type : 'POST',
+        url : deliverChargeUrl,
+        data : {
+            'merchant_id': merchant_id,
+            'weight':weight,
+            'delivery_type_id':delivery_type_id,
+            'pickup_district_id':pickup_district_id,
+            'destination_district_id':destination_district_id,
+            'delivery_distance': delivery_distance
+        },
+        dataType : "json",
+        beforeSend: function() {
+            clearErrorMessages();
+        },
+        success : function (data) {
+            $('#deliveryChargeAmount').text(data);
+            totalSum();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status === 400) {
+                var response = jqXHR.responseJSON;
+                var field = response.field;
+                var message = response.message;
 
-        $.ajax({
-            type : 'POST',
-            url : deliverChargeUrl,
-            data : {
-                'merchant_id': merchant_id,
-                'weight':weight,
-                'delivery_type_id':delivery_type_id,
-                'pickup_district_id':pickup_district_id,
-                'destination_district_id':destination_district_id,
-                'delivery_distance': delivery_distance
-            },
-            dataType : "json",
-            beforeSend: function() {
-                clearErrorMessages();
-            },
-            success : function (data) {
-                $('#deliveryChargeAmount').text(data);
-                totalSum();
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                if (jqXHR.status === 400) {
-                    var response = jqXHR.responseJSON;
-                    var field = response.field;
-                    var message = response.message;
-
-                    $('#' + field + '_error').text(message);
-                } else {
-                    // Handle other errors
-                    console.error('Unexpected error:', errorThrown);
-                }
+                $('#' + field + '_error').text(message);
+            } else {
+                // Handle other errors
+                console.error('Unexpected error:', errorThrown);
             }
-        });
-    }
+        }
+    });
 
 }
 
