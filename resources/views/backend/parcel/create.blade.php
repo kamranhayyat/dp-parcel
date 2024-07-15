@@ -152,7 +152,7 @@
                                 <div class="form-group col-12 col-md-6">
                                     <label for="delivery_type_id">{{ __('parcel.delivery_type') }}</label> <span
                                         class="text-danger">*</span>
-                                    <select style="width: 100%" class="form-control select2" id="delivery_type_id"
+                                    <select style="width: 100%" class="form-control" id="delivery_type_id"
                                         name="delivery_type_id" required="">
                                         <option value=""> {{ __('menus.select') }} {{ __('menus.delivery_type') }}
                                         </option>

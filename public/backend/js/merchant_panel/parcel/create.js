@@ -4,7 +4,7 @@ $(document).ready(function(){
     $( "#shopID" ).select2();
     $( "#category_id" ).select2();
     $( "#weightID" ).select2();
-    $( "#delivery_type_id" ).select2();
+    //$( "#delivery_type_id" ).select2();
     deliveryCharge();
 });
 

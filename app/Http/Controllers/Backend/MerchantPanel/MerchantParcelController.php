@@ -323,7 +323,13 @@ class MerchantParcelController extends Controller
             }
 
             $deliveryChargeOtherKgRate = 0;
-            $deliveryChargeFirstKgRate = $deliveryCharge->first_kg * $request->delivery_distance;
+            
+            if($request->delivery_type_id === 'normal') {
+                $deliveryChargeFirstKgRate = $deliveryCharge->first_kg;
+            } else {
+                $deliveryChargeFirstKgRate = $deliveryCharge->first_kg * $request->delivery_distance;
+            }
+            
             if($request->weight > 1) {
                 $deliveryChargeOtherKgRate = ($request->weight - 1) * $deliveryCharge->other_kg;
             }
