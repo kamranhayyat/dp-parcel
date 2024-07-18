@@ -35,11 +35,13 @@ class ShopsRepository implements ShopsInterface{
     }
 
     public function store($request){
+        dd($request);
 
         try {
             $shop                   = new MerchantShops();
             $shop->merchant_id      = $request->merchant_id;
             $shop->district_id = $request->district_id;
+            $shop->city_id = $request->city_id;
             $shop->name             = $request->name;
             $shop->contact_no       = $request->contact_no;
             $shop->address          = $request->address;
@@ -55,6 +57,7 @@ class ShopsRepository implements ShopsInterface{
     }
 
         public function update($request){
+//            dd($request);
 
             try {
                 $shop              = MerchantShops::where('id',$request->id)->first();
@@ -62,6 +65,7 @@ class ShopsRepository implements ShopsInterface{
                 $shop->name        = $request->name;
                 $shop->contact_no  = $request->contact_no;
                 $shop->district_id = $request->district_id;
+                $shop->city_id = $request->city_id;
                 $shop->address     = $request->address;
                 $shop->merchant_lat= $request->lat;
                 $shop->merchant_long= $request->long;

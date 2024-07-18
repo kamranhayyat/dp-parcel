@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\MerchantPanel;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use Illuminate\Http\Request;
 use App\Http\Requests\MerchantPanel\Shops\StoreRequest;
 use App\Http\Requests\MerchantPanel\Shops\UpdateRequest;
@@ -59,5 +60,14 @@ class ShopsController extends Controller
         $this->repo->delete($id);
         Toastr::success(__('merchantshops.delete_msg'),__('message.success'));
         return back();
+    }
+
+    public function territoryCity(Request $request)
+    {
+        if (request()->ajax()) {
+            $cities = City::query()->where('district_id', $request->district_id)->get();
+            dd($cities);
+        }
+
     }
 }
