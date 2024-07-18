@@ -305,6 +305,7 @@ Route::middleware(['XSS', 'IsInstalled'])->group(function () {
                 Route::put('merchant/shops/update',         [MerchantShopsController::class, 'update'])->name('merchant.shops.update')->middleware('hasPermission:merchant_shop_update');
                 Route::delete('merchant/shops/delete/{id}', [MerchantShopsController::class, 'delete'])->name('merchant.shops.delete')->middleware('hasPermission:merchant_shop_delete');
                 Route::get('merchant/shops/default/{merchant_id}/{id}', [MerchantShopsController::class, 'defaultShop'])->name('merchant.shops.default');
+                Route::post('merchant/shops/cities', [MerchantShopsController::class, 'territoryCity'])->name('merchant.shops.territory.cities');
                 //merchant payment account
                 Route::get('merchant/{id}/payment/index',       [MerchantPaymentAccountController::class, 'index'])->name('merchant.paymentaccount.index')->middleware('hasPermission:merchant_payment_read');
                 Route::get('merchant/{id}/payment/add',         [MerchantPaymentAccountController::class, 'paymentAdd'])->name('merchant.payment.add')->middleware('hasPermission:merchant_payment_create');
@@ -821,6 +822,7 @@ Route::middleware(['XSS', 'IsInstalled'])->group(function () {
                 Route::get('shops/edit/{id}',        [ShopsController::class, 'edit'])->name('merchant-panel.shops.edit');
                 Route::put('shops/update/{id}',      [ShopsController::class, 'update'])->name('merchant-panel.shops.update');
                 Route::delete('shops/delete/{id}',   [ShopsController::class, 'delete'])->name('merchant-panel.shops.delete');
+                Route::post('shops/cities', [ShopsController::class, 'territoryCity'])->name('merchant-panel.shops.territory.cities');
                 // Parcel Routes
                 Route::get('parcel/filter',          [MerchantParcelController::class, 'filter'])->name('merchant-panel.parcel.filter');
                 Route::get('parcel/index',           [MerchantParcelController::class, 'index'])->name('merchant-panel.parcel.index');

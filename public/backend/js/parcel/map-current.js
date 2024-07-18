@@ -280,28 +280,30 @@ function updateDeliveryOptions(lat, lng) {
 
     var [defaultHours, defaultMinutes] = defaultParcelTime.split(':').map(Number);
 
-    $deliveryTypeSelect.find('option').not(':first').remove();
+    // Clear existing options except the first one
+    // $deliveryTypeSelect.find('option').not(':first').remove();
 
     var isAfterDefaultTime = (currentTime.getHours() > defaultHours) ||
         (currentTime.getHours() === defaultHours && currentTime.getMinutes() > defaultMinutes);
 
     if (dist <= 15) {
-        if (!isAfterDefaultTime) {
+        if (!isAfterDefaultTime && !$deliveryTypeSelect.find('option[value="express"]').length) {
             $deliveryTypeSelect.append('<option value="express">Express</option>');
         }
     }
 
     if (dist <= 50) {
-        if (!isAfterDefaultTime) {
+        if (!isAfterDefaultTime && !$deliveryTypeSelect.find('option[value="same_day"]').length) {
             $deliveryTypeSelect.append('<option value="same_day">Same Day</option>');
         }
     }
 
+    if (!$deliveryTypeSelect.find('option[value="normal"]').length) {
+        $deliveryTypeSelect.append('<option value="normal">Normal</option>');
+    }
 
-    $deliveryTypeSelect.append('<option value="normal">Normal</option>');
-
-
-    //$deliveryTypeSelect.trigger('change.select2');
+    $deliveryTypeSelect.trigger('change');
 }
+
 
 

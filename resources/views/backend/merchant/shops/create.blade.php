@@ -88,6 +88,15 @@
                       </div>
 
                       <div class="form-group">
+                          <label for="city_id">{{ __('Territory City') }}</label> <span class="text-danger">*</span>
+                          <select id="city_id" name="city_id" data-parsley-trigger="change" require class="form-control">
+                          </select>
+                          @error('city_id')
+                          <small class="text-danger mt-2">{{ $message }}</small>
+                          @enderror
+                      </div>
+
+                      <div class="form-group">
                           <label for="status">{{__('levels.status')}}</label> <span class="text-danger">*</span>
                           <select name="status" class="form-control @error('status') is-invalid @enderror">
                               @foreach(trans('status') as $key => $status)
@@ -174,5 +183,9 @@
         var mapLong = '';
     </script>
     <script type="text/javascript" src="{{ static_asset('backend/js/map/map-current.js') }}"></script>
+    <script>
+        var territoryCityUrl = '{{ route('merchant.shops.territory.cities') }}';
+    </script>
+    <script type="text/javascript" src="{{ static_asset('backend/js/merchant/shops/create.js') }}"></script>
     <script async src="https://maps.googleapis.com/maps/api/js?key={{ googleMapSettingKey() }}&libraries=places&callback=initMap"> </script>
 @endpush

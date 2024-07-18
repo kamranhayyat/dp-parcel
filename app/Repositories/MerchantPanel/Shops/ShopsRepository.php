@@ -26,6 +26,7 @@ class ShopsRepository implements ShopsInterface{
                 $shop              = new MerchantShops();
                 $shop->merchant_id = $id;
                 $shop->district_id = $request->district_id;
+                $shop->city_id = $request->city_id;
                 $shop->name        = $request->name;
                 $shop->contact_no  = $request->contact_no;
                 $shop->address     = $request->address;
@@ -41,12 +42,12 @@ class ShopsRepository implements ShopsInterface{
     }
 
     public function update($id, $request){
-
         try {
                 $shop               = MerchantShops::where('id',$id)->first();
                 $shop->name         = $request->name;
                 $shop->contact_no   = $request->contact_no;
                 $shop->district_id = $request->district_id;
+                $shop->city_id = $request->city_id;
                 $shop->address      = $request->address;
                 $shop->merchant_lat = $request->lat;
                 $shop->merchant_long= $request->long;

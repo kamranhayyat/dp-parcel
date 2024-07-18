@@ -16,6 +16,7 @@ class GeneralSettingsRepository implements GeneralSettingsInterface{
 
         $row               = GeneralSettings::find(1);
         $row->name         = $request->name;
+        $row->parcel_time         = $request->parcel_time;
         $row->phone        = $request->phone;
         $row->email        = $request->email;
         $row->address      = $request->address;
@@ -49,7 +50,7 @@ class GeneralSettingsRepository implements GeneralSettingsInterface{
 
     public function file($image_id = '', $image)
     {
-         
+
         try {
             $image_name = '';
             if(!blank($image)){

@@ -18,6 +18,7 @@ class MerchantShops extends Model
 
         'merchant_id',
         'district_id',
+        'city_id',
         'name',
         'contact_no',
         'address',

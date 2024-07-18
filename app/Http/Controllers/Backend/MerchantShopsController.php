@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MerchantShop\StoreRequest;
 use App\Http\Requests\MerchantShop\UpdateRequest;
+use App\Models\City;
 use App\Repositories\MerchantShops\ShopsInterface;
 use App\Repositories\Merchant\MerchantInterface;
 use Illuminate\Http\Request;
@@ -87,5 +88,16 @@ class MerchantShopsController extends Controller
         $this->repo->defaultShop($merchant_id,$id);
         Toastr::success(__('merchantshops.update_msg'),__('message.success'));
         return back();
+    }
+
+    public function territoryCity(Request $request)
+    {
+        if (request()->ajax()) {
+            $cities = City::query()->select('id', 'name')->where('district_id', $request->district_id)->get();
+            if($cities != null) {
+                return $cities;
+            }
+        }
+
     }
 }
