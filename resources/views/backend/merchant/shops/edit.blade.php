@@ -87,6 +87,11 @@
                         <div class="form-group">
                             <label for="city_id">{{ __('Territory City') }}</label> <span class="text-danger">*</span>
                             <select id="city_id" name="city_id" data-parsley-trigger="change" require class="form-control">
+                                @foreach($cities as $city)
+                                    <option value="{{ $city->id }}" {{ (old('district_id', $edit_shop->city_id) == $city->id) ? 'selected' : '' }}>
+                                        {{ $city->name }}
+                                    </option>
+                                @endforeach
                             </select>
                             @error('city_id')
                             <small class="text-danger mt-2">{{ $message }}</small>

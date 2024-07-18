@@ -44,7 +44,8 @@ class ShopsController extends Controller
     public function edit($id){ // shop id
         $shop = $this->repo->get($id);
         $districts = $this->repo->getAllDistricts();
-        return view('backend.merchant_panel.shops.edit', compact('shop', 'districts'));
+        $cities = City::query()->select('id', 'name')->where('district_id', $shop->district_id)->get();
+        return view('backend.merchant_panel.shops.edit', compact('shop', 'districts', 'cities'));
     }
 
     public function update($id, UpdateRequest $request){
