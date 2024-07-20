@@ -354,6 +354,8 @@ class ParcelRepository implements ParcelInterface
             $parcel->customer_long          = $request->long;
             $parcel->delivery_type_id       = $request->delivery_type_id;
             $parcel->priority_type_id       = $request->priority_id;
+            $parcel->district_id            = $request->district_id;
+            $parcel->city_id                = $request->city_id;
             // Pickup & Delivery Time
             if ($request->delivery_type_id == DeliveryType::SAMEDAY) {
                 if (date('H') < DeliveryTime::LAST_TIME) {
@@ -525,6 +527,8 @@ class ParcelRepository implements ParcelInterface
             $parcel->customer_lat           = $request->lat;
             $parcel->customer_long          = $request->long;
             $parcel->delivery_type_id       = $request->delivery_type_id;
+            $parcel->district_id            = $request->district_id;
+            $parcel->city_id                = $request->city_id;
             $parcel->note                   = $request->note;
             $parcel->status                 = ParcelStatus::PENDING;
             // Pickup & Delivery Time
@@ -698,6 +702,8 @@ class ParcelRepository implements ParcelInterface
             $parcel->customer_long          = $request->long;
             $parcel->customer_address       = $request->customer_address;
             $parcel->delivery_type_id       = $request->delivery_type_id;
+            $parcel->district_id            = $request->district_id;
+            $parcel->city_id                = $request->city_id;
             // Pickup & Delivery Time
             if ($request->delivery_type_id == DeliveryType::SAMEDAY) {
                 if (date('H') < DeliveryTime::LAST_TIME) {

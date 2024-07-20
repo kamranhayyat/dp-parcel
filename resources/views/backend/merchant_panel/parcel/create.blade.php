@@ -54,8 +54,8 @@
                                            value="{{ $merchant->cod_charges['outside_city'] }}" />
                                 </div>
                                 <div class="form-group col-12 col-md-6">
-                                    <label for="districts">{{ __('Delivery Territory') }}</label>
-                                    <select style="width: 100%" id="districts" class="form-control" name="districts">
+                                    <label for="district_id">{{ __('Delivery Territory') }}</label>
+                                    <select style="width: 100%" id="district_id" class="form-control" name="district_id">
                                         @foreach($districts as $district)
                                             <option value="{{$district->id}}">{{$district->sector}}</option>
                                         @endforeach
@@ -64,6 +64,14 @@
                                     <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
                                     <span id="destination_district_id_error" class="error-message text-danger mt-2"></span>
+                                </div>
+                                <div class="form-group col-12 col-md-6">
+                                    <label for="city_id">{{ __('Territory City') }}</label> <span class="text-danger">*</span>
+                                    <select id="city_id" name="city_id" data-parsley-trigger="change" require class="form-control">
+                                    </select>
+                                    @error('city_id')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
                                 </div>
                                 <div class="form-group col-12 col-md-6">
                                     <label for="pickup_phone">{{ __('parcel.pickup_phone') }}</label>
@@ -411,4 +419,8 @@
         var merchantData = @json($merchant);
     </script>
     <script src="{{ static_asset('backend/js/merchant_panel/parcel/create.js') }}"></script>
+    <script>
+        var territoryCityUrl = '{{ route('merchant.shops.territory.cities') }}';
+    </script>
+    <script type="text/javascript" src="{{ static_asset('backend/js/merchant/shops/create.js') }}"></script>
 @endpush

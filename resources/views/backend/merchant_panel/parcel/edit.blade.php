@@ -57,6 +57,34 @@
 
 
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="contact">{{ __('merchantshops.district') }}</label> <span class="text-danger">*</span>
+                                    <select id="district_id" name="district_id" data-parsley-trigger="change" require class="form-control">
+                                        @foreach($districts as $district)
+                                            <option value="{{ $district->id }}" {{ (old('district_id', $parcel->district_id) == $district->id) ? 'selected' : '' }}>
+                                                {{ $district->sector }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('district')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label for="city_id">{{ __('Territory City') }}</label> <span class="text-danger">*</span>
+                                    <select id="city_id" name="city_id" data-parsley-trigger="change" require class="form-control">
+                                        @foreach($cities as $city)
+                                            <option value="{{ $city->id }}" {{ (old('district_id', $edit_shop->city_id) == $city->id) ? 'selected' : '' }}>
+                                                {{ $city->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('city_id')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
                                 <div class="form-group col-12 col-md-6">
                                     <label for="pickup_phone">{{ __('parcel.pickup_phone') }}</label>
                                     <input id="pickup_phone" type="text" name="pickup_phone"
@@ -122,25 +150,6 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group col-12 col-md-6">
-                                    <label for="merchant">{{ __('parcel.category') }}</label> <span
-                                        class="text-danger">*</span>
-                                    <select style="width: 100%" id="category_id" class="form-control select2"
-                                        name="category_id" class="form-control @error('category_id') is-invalid @enderror"
-                                        data-url="{{ route('parcel.deliveryCategory.deliveryWeight') }}" required="">
-                                        <option value=""> {{ __('menus.select') }} {{ __('parcel.category') }}
-                                        </option>
-                                        @foreach ($deliveryCategoryCharges as $deliveryCategoryCharge)
-                                            <option value="{{ $deliveryCategories[$deliveryCategoryCharge]->id }}"
-                                                {{ old('category_id', $parcel->category_id) == $deliveryCategories[$deliveryCategoryCharge]->id ? 'selected' : '' }}>
-                                                {{ $deliveryCategories[$deliveryCategoryCharge]->title }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('category_id')
-                                        <small class="text-danger mt-2">{{ $message }}</small>
-                                    @enderror
-                                </div>
-
                                 <div class="form-group col-12 col-md-6" id="categoryWeight">
                                     <label for="weightID">{{ __('parcel.weight') }}</label> <span
                                         class="text-danger">*</span>
@@ -163,31 +172,31 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group col-12 col-md-6">
-                                    <label for="delivery_type_id">{{ __('parcel.delivery_type') }}</label> <span
-                                        class="text-danger">*</span>
-                                    <select style="width: 100%" class="form-control select2" id="delivery_type_id"
-                                        name="delivery_type_id" required="">
-                                        <option value=""> {{ __('menus.select') }} {{ __('parcel.delivery_type') }}
-                                        </option>
-                                        @foreach ($deliveryTypes as $key => $status)
-                                            <option
-                                                @if ($status->key == 'same_day') value="1" @if ($parcel->delivery_type_id == 1) selected @endif
-                                            @elseif($status->key == 'next_day') value="2"
-                                                @if ($parcel->delivery_type_id == 2) selected @endif
-                                            @elseif($status->key == 'sub_city') value="3"
-                                                @if ($parcel->delivery_type_id == 3) selected @endif
-                                            @elseif($status->key == 'outside_City') value="4"
-                                                @if ($parcel->delivery_type_id == 4) selected @endif @endif
-                                                >
-                                                {{ __('deliveryType.' . $status->key) }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('delivery_type_id')
-                                        <small class="text-danger mt-2">{{ $message }}</small>
-                                    @enderror
-                                </div>
+{{--                                <div class="form-group col-12 col-md-6">--}}
+{{--                                    <label for="delivery_type_id">{{ __('parcel.delivery_type') }}</label> <span--}}
+{{--                                        class="text-danger">*</span>--}}
+{{--                                    <select style="width: 100%" class="form-control select2" id="delivery_type_id"--}}
+{{--                                        name="delivery_type_id" required="">--}}
+{{--                                        <option value=""> {{ __('menus.select') }} {{ __('parcel.delivery_type') }}--}}
+{{--                                        </option>--}}
+{{--                                        @foreach ($deliveryTypes as $key => $status)--}}
+{{--                                            <option--}}
+{{--                                                @if ($status->key == 'same_day') value="1" @if ($parcel->delivery_type_id == 1) selected @endif--}}
+{{--                                            @elseif($status->key == 'next_day') value="2"--}}
+{{--                                                @if ($parcel->delivery_type_id == 2) selected @endif--}}
+{{--                                            @elseif($status->key == 'sub_city') value="3"--}}
+{{--                                                @if ($parcel->delivery_type_id == 3) selected @endif--}}
+{{--                                            @elseif($status->key == 'outside_City') value="4"--}}
+{{--                                                @if ($parcel->delivery_type_id == 4) selected @endif @endif--}}
+{{--                                                >--}}
+{{--                                                {{ __('deliveryType.' . $status->key) }}--}}
+{{--                                            </option>--}}
+{{--                                        @endforeach--}}
+{{--                                    </select>--}}
+{{--                                    @error('delivery_type_id')--}}
+{{--                                        <small class="text-danger mt-2">{{ $message }}</small>--}}
+{{--                                    @enderror--}}
+{{--                                </div>--}}
 
                                 <div class="form-group col-12 col-md-6">
                                     <label for="customer_name">{{ __('parcel.customer_name') }}</label> <span
@@ -463,4 +472,8 @@
         src="https://maps.googleapis.com/maps/api/js?key={{ googleMapSettingKey() }}&libraries=places&callback=initMap">
     </script>
     <script src="{{ static_asset('backend/js/merchant_panel/parcel/edit.js') }}"></script>
+    <script>
+        var territoryCityUrl = '{{ route('merchant.shops.territory.cities') }}';
+    </script>
+    <script type="text/javascript" src="{{ static_asset('backend/js/merchant/shops/create.js') }}"></script>
 @endpush

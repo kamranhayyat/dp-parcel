@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\ParcelImport;
 use App\Models\Backend\DeliveryCharge;
 use App\Models\Backend\MerchantDeliveryCharge;
+use App\Models\City;
 use App\Models\District;
 use App\Models\MerchantShops;
 use App\Repositories\GeneralSettings\GeneralSettingsInterface;
@@ -172,7 +173,9 @@ class MerchantParcelController extends Controller
             $deliveryCategoryCharges = $this->repo->deliveryCharges();
             $packagings = $this->repo->packaging();
             $deliveryTypes      = $this->repo->deliveryTypes();
-            return view('backend.merchant_panel.parcel.edit',compact('parcel','merchant','deliveryTypes','shops','deliveryCategories','deliveryCategoryCharges','deliveryCharges','packagings'));
+            $districts          = $this->shop->getAllDistricts();
+            $cities = City::query()->select('id', 'name')->where('district_id', $parcel->district_id)->get();
+            return view('backend.merchant_panel.parcel.edit',compact('parcel','merchant','deliveryTypes','shops','deliveryCategories','deliveryCategoryCharges','deliveryCharges','packagings', 'cities', 'districts'));
         }
         else{
             Toastr::error(__('parcel.edit_error_message'),__('message.error'));
@@ -282,7 +285,6 @@ class MerchantParcelController extends Controller
             $fields = [
                 'weight' => 'Weight should not be empty',
                 'delivery_type_id' => 'Delivery type should not be empty',
-                'destination_district_id' => 'Destination district should not be empty',
                 'delivery_distance' => 'Delivery distance should not be empty',
             ];
 
@@ -323,13 +325,13 @@ class MerchantParcelController extends Controller
             }
 
             $deliveryChargeOtherKgRate = 0;
-            
+
             if($request->delivery_type_id === 'normal') {
                 $deliveryChargeFirstKgRate = $deliveryCharge->first_kg;
             } else {
                 $deliveryChargeFirstKgRate = $deliveryCharge->first_kg * $request->delivery_distance;
             }
-            
+
             if($request->weight > 1) {
                 $deliveryChargeOtherKgRate = ($request->weight - 1) * $deliveryCharge->other_kg;
             }

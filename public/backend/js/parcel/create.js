@@ -216,7 +216,7 @@ function deliveryCharge() {
     var category_id        = $("select#category_id option").filter(":selected").val();
     var weight             = $("#weight").val();
     var delivery_type_id   = $("select#delivery_type_id option").filter(":selected").val();
-    var destination_district_id   = $("select#districts option").filter(":selected").val();
+    var destination_district_id   = $("select#district_id option").filter(":selected").val();
     var pickup_district_id   = $("#pickup_district_id").val();
     var delivery_distance   = $('#delivery_distance').val();
 

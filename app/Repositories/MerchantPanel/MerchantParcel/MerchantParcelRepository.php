@@ -144,7 +144,7 @@ class MerchantParcelRepository implements MerchantParcelInterface
 
     public function deliveryCategories()
     {
-       
+
         return pluck(DB::table('deliverycategories')->get(), 'obj', 'id');
     }
 
@@ -193,6 +193,8 @@ class MerchantParcelRepository implements MerchantParcelInterface
             $parcel->customer_lat           = $request->lat;
             $parcel->customer_long          = $request->long;
             $parcel->delivery_type_id       = $request->delivery_type_id;
+            $parcel->district_id            = $request->district_id;
+            $parcel->city_id                = $request->city_id;
             // Pickup & Delivery Time
             if ($request->delivery_type_id == DeliveryType::SAMEDAY) {
                 if (date('H') < DeliveryTime::LAST_TIME) {
@@ -331,6 +333,8 @@ class MerchantParcelRepository implements MerchantParcelInterface
             $parcel->customer_long          = $request->long;
 
             $parcel->delivery_type_id       = $request->delivery_type_id;
+            $parcel->district_id            = $request->district_id;
+            $parcel->city_id                = $request->city_id;
             $parcel->note                   = $request->note;
             $parcel->parcel_bank            = $request->parcel_bank;
             $parcel->status                 = ParcelStatus::PENDING;
@@ -495,6 +499,8 @@ class MerchantParcelRepository implements MerchantParcelInterface
             $parcel->customer_long          = $request->long;
 
             $parcel->delivery_type_id       = $request->delivery_type_id;
+            $parcel->district_id            = $request->district_id;
+            $parcel->city_id                = $request->city_id;
 
             // Pickup & Delivery Time
             if ($request->delivery_type_id == DeliveryType::SAMEDAY) {
