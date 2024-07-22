@@ -54,8 +54,6 @@ class ParcelImport implements ToModel, WithHeadingRow ,WithValidation , SkipsEmp
             $shop_id          = $merchantshop->id;
             $pickup_phone     = $merchantshop->contact_no;
             $pickup_address   = $merchantshop->address;
-            $pickup_lat       = $merchantshop->merchant_lat;
-            $pickup_long      = $merchantshop->merchant_long;
         else:
             $category_id      = $row['category_id'];
             $liquid_fragile   = $row['liquid_fragile'];
