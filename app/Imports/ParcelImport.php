@@ -12,7 +12,10 @@ use App\Models\Backend\Merchant;
 use App\Models\Backend\MerchantDeliveryCharge;
 use App\Models\Backend\Packaging;
 use App\Models\Backend\Parcel;
+use App\Models\City;
+use App\Models\District;
 use App\Models\MerchantShops;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -35,18 +38,19 @@ class ParcelImport implements ToModel, WithHeadingRow ,WithValidation , SkipsEmp
      */
     public function model(array $row)
     {
-
         if(isset($row['merchant_id']) && !blank($row['merchant_id'])) {
             $merchant = Merchant::where('id',$row['merchant_id'])->first();
         }else {
             $merchant = Merchant::where('user_id',auth()->user()->id)->first();
         }
+
+        $delivery_type_id = 'normal';
+        $merchantshop     = MerchantShops::where(['merchant_id'=>$merchant->id,'default_shop'=>Status::ACTIVE])->first();
+
         if(auth()->user()->merchant):
             $category_id      = 1;
-            $delivery_type_id = 2;
             $liquid_fragile   = null;
             $packaging_id     = null;
-            $merchantshop     = MerchantShops::where(['merchant_id'=>$merchant->id,'default_shop'=>Status::ACTIVE])->first();
             $shop_id          = $merchantshop->id;
             $pickup_phone     = $merchantshop->contact_no;
             $pickup_address   = $merchantshop->address;
@@ -54,19 +58,18 @@ class ParcelImport implements ToModel, WithHeadingRow ,WithValidation , SkipsEmp
             $pickup_long      = $merchantshop->merchant_long;
         else:
             $category_id      = $row['category_id'];
-            $delivery_type_id = $row['delivery_type_id'];
             $liquid_fragile   = $row['liquid_fragile'];
             $packaging_id     = $row['packaging_id'];
             $shop_id          = $row['shop_id'];
             $pickup_phone     = $row['pickup_phone'];
             $pickup_address   = $row['pickup_address'];
 
-            $pickup_lat       = $row['pickup_lat'];
-            $pickup_long      = $row['pickup_long'];
-
         endif;
 
-        $deliveryChargeAmount = $this->deliveryCharge($merchant->id,$category_id,$row['weight'],$delivery_type_id);
+        $deliveryDistrict = District::query()->where('sector', $row['delivery_territory'])->first();
+        $deliveryCity = City::query()->where('name', $row['territory_city'])->first();
+
+        $deliveryChargeAmount = $this->deliveryCharge($merchantshop->district_id, $deliveryDistrict, $row['weight']);
         $codChargeAmount      = $this->codCharge($merchant,$row['cash_collection'],$delivery_type_id);
         $liquidFragileAmount  = null;
         $packagingAmount      = 0;
@@ -88,65 +91,6 @@ class ParcelImport implements ToModel, WithHeadingRow ,WithValidation , SkipsEmp
             'delivery'     =>date('Y-m-d'),
         ];
 
-        // Pickup & Delivery Time
-        if($delivery_type_id == DeliveryType::SAMEDAY){
-            if(date('H') < DeliveryTime::LAST_TIME){
-                $deliveryTime = [
-                    'pickup'       =>date('Y-m-d'),
-                    'delivery'     =>date('Y-m-d'),
-                ];
-            }
-            else{
-                $deliveryTime = [
-                    'pickup'       =>date('Y-m-d', strtotime(date('Y-m-d') . ' +1 day')),
-                    'delivery'     =>date('Y-m-d', strtotime(date('Y-m-d') . ' +1 day')),
-                ];
-            }
-        }
-        elseif($delivery_type_id == DeliveryType::NEXTDAY){
-            if(date('H') < DeliveryTime::LAST_TIME){
-                $deliveryTime = [
-                    'pickup'       =>date('Y-m-d'),
-                    'delivery'     =>date('Y-m-d', strtotime(date('Y-m-d') . ' +1 day')),
-                ];
-            }
-            else{
-                $deliveryTime = [
-                    'pickup'       =>date('Y-m-d', strtotime(date('Y-m-d') . ' +1 day')),
-                    'delivery'     =>date('Y-m-d', strtotime(date('Y-m-d') . ' +2 day')),
-                ];
-            }
-        }
-        elseif($delivery_type_id == DeliveryType::SUBCITY){
-            if(date('H') < DeliveryTime::LAST_TIME){
-                $deliveryTime = [
-                    'pickup'       =>date('Y-m-d'),
-                    'delivery'     =>date('Y-m-d', strtotime(date('Y-m-d') . ' +'. DeliveryTime::SUBCITY .' day')),
-                ];
-            }
-            else{
-                $deliveryTime = [
-                    'pickup'       =>date('Y-m-d', strtotime(date('Y-m-d') . ' +1 day')),
-                    'delivery'     =>date('Y-m-d', strtotime(date('Y-m-d') . ' +'. DeliveryTime::SUBCITY + 1 .' day')),
-                ];
-            }
-        }
-        elseif($delivery_type_id == DeliveryType::OUTSIDECITY){
-            if(date('H') < DeliveryTime::LAST_TIME){
-                $deliveryTime = [
-                    'pickup'       =>date('Y-m-d'),
-                    'delivery'     =>date('Y-m-d', strtotime(date('Y-m-d') . ' +'. DeliveryTime::OUTSIDECITY .' day')),
-                ];
-            }
-            else{
-                $deliveryTime = [
-                    'pickup'       =>date('Y-m-d', strtotime(date('Y-m-d') . ' +1 day')),
-                    'delivery'     =>date('Y-m-d', strtotime(date('Y-m-d') . ' +'. DeliveryTime::OUTSIDECITY + 1 .' day')),
-                ];
-            }
-        }
-        // End Pickup & Delivery Time
-
         $n = (int)floor(microtime(true) * 1000) % 1000000000;
         $parcels = [
             'merchant_id'       => $merchant->id,
@@ -160,8 +104,6 @@ class ParcelImport implements ToModel, WithHeadingRow ,WithValidation , SkipsEmp
             'merchant_shop_id'  => $shop_id,
             'pickup_phone'      => $pickup_phone,
             'pickup_address'    => $pickup_address,
-            'pickup_lat'        => $pickup_lat,
-            'pickup_long'       => $pickup_long,
             'customer_name'     => $row['customer_name'],
             'customer_phone'    => $row['customer_phone'],
             'customer_address'  => $row['customer_address'],
@@ -181,6 +123,8 @@ class ParcelImport implements ToModel, WithHeadingRow ,WithValidation , SkipsEmp
             'note'              => $row['note'],
             'packaging_id'      => $packaging_id,
             'packaging_amount'  => $packagingAmount,
+            'district_id'  => $deliveryDistrict->id,
+            'city_id'  => $deliveryCity->id,
             'liquid_fragile_amount' => $liquidFragileAmount,
             'status'            => ParcelStatus::PENDING,
             'created_at'        =>date('Y-m-d H:i:s'),
@@ -195,57 +139,49 @@ class ParcelImport implements ToModel, WithHeadingRow ,WithValidation , SkipsEmp
         if(auth()->user()->merchant):
             $shop_id           = ['numeric'];
             $category_id       = ['numeric'];
-            $delivery_type_id  = ['numeric'];
         else:
             $shop_id           = ['required','numeric'];
             $category_id       = ['required','numeric'];
-            $delivery_type_id  = ['required','numeric'];
         endif;
         return [
             'shop_id'           => $shop_id,
             'cash_collection'   => ['required','numeric'],
             'category_id'       => $category_id,
-            'delivery_type_id'  => $delivery_type_id,
             'customer_name'     => ['required','string','max:191'],
             'customer_address'  => ['required','string','max:191'],
         ];
     }
 
-    private function deliveryCharge($merchant_id,$category_id,$weight,$delivery_type_id)
+    private function deliveryCharge($pickup_district_id, $deliveryDistrict,$weight)
     {
-        if ($merchant_id && $category_id && $weight !='0' && $delivery_type_id) {
-            $charges = MerchantDeliveryCharge::where([
-                'merchant_id'=>$merchant_id,
-                'category_id'=>$category_id,
-                'weight'=>$weight
-            ])->first();
-            if (blank($charges)) {
-                $charges = DeliveryCharge::where(['category_id'=>$category_id])->first();
-            }
+        $pickUpDistrict = District::query()->where('id', $pickup_district_id)->first();
+        $subCategory = null;
 
-        } else {
-            $charges = MerchantDeliveryCharge::where(['merchant_id'=>$merchant_id,'category_id'=>$category_id,'weight'=>$weight])->first();
-            if (blank($charges)) {
-                $charges = DeliveryCharge::where(['category_id'=>$category_id])->first();
-            }
+        if($pickUpDistrict->id === $deliveryDistrict->id && $pickUpDistrict->number != "1") {
+            $subCategory = 'same_sector';
+        } else if($pickUpDistrict->number == "1" && $deliveryDistrict->number == "1") {
+            $subCategory = $deliveryDistrict->sector;
+        } else if($pickUpDistrict->id !== $deliveryDistrict->id &&
+            $pickUpDistrict->number !== $deliveryDistrict->number) {
+            $subCategory = 'different_sector';
         }
 
-        if (!blank($charges)) {
-            if($delivery_type_id == '1'){
-                $chargeAmount = $charges->same_day;
-            }elseif ($delivery_type_id == '2') {
-                $chargeAmount = $charges->next_day;
-            }elseif ($delivery_type_id == '3') {
-                $chargeAmount = $charges->sub_city;
-            }elseif ($delivery_type_id == '4') {
-                $chargeAmount = $charges->outside_city;
-            }else {
-                $chargeAmount = 0;
-            }
+        $deliveryCharge = DeliveryCharge::query()
+            ->where('category', 'normal')
+            ->where('sub_category', $subCategory)
+            ->first();
 
-            return $chargeAmount;
+        if (!$deliveryCharge) {
+            return new ModelNotFoundException('Delivery charge not found');
         }
-        return 0;
+
+        $deliveryChargeOtherKgRate = 0;
+        $deliveryChargeFirstKgRate = $deliveryCharge->first_kg;
+        if($weight > 1) {
+            $deliveryChargeOtherKgRate = ($weight - 1) * $deliveryCharge->other_kg;
+        }
+
+        return  $deliveryChargeFirstKgRate + $deliveryChargeOtherKgRate;
     }
 
     private function codCharge($merchant,$cash_collection,$delivery_type_id)
