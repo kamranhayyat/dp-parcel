@@ -30,6 +30,8 @@ class UpdateRequest extends FormRequest
             'customer_name'     => ['required','string','max:191'],
             'customer_address'  => ['required','string','max:191'],
             'customer_phone'    => ['required','string','max:191'],
+            'district_id'       => ['required'],
+            'city_id'       => ['required'],
         ];
     }
 }
