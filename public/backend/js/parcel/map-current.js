@@ -281,7 +281,7 @@ function updateDeliveryOptions(lat, lng) {
     var [defaultHours, defaultMinutes] = defaultParcelTime.split(':').map(Number);
 
     // Clear existing options except the first one
-    // $deliveryTypeSelect.find('option').not(':first').remove();
+    $deliveryTypeSelect.find('option').remove();
 
     var isAfterDefaultTime = (currentTime.getHours() > defaultHours) ||
         (currentTime.getHours() === defaultHours && currentTime.getMinutes() > defaultMinutes);
