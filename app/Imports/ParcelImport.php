@@ -147,6 +147,8 @@ class ParcelImport implements ToModel, WithHeadingRow ,WithValidation , SkipsEmp
             'category_id'       => $category_id,
             'customer_name'     => ['required','string','max:191'],
             'customer_address'  => ['required','string','max:191'],
+            'delivery_territory'=> ['required'],
+            'territory_city'    => ['required'],
         ];
     }
 
@@ -188,7 +190,7 @@ class ParcelImport implements ToModel, WithHeadingRow ,WithValidation , SkipsEmp
         $data['merchantCodCharge'] = 0;
         $data['codAmount'] = 0;
 
-        if($delivery_type_id !=='' && $delivery_type_id =='1' || $delivery_type_id =='2'){
+        if($delivery_type_id !=='' && $delivery_type_id =='express' || $delivery_type_id =='normal'){
             $data['merchantCodCharge'] = $merchant->cod_charges['inside_city'];
             $data['codAmount'] = $this->percentage($cash_collection, $merchant->cod_charges['inside_city']);
         }else if($delivery_type_id !='' && $delivery_type_id =='3'){

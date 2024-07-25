@@ -201,23 +201,23 @@ class MerchantRepository implements MerchantInterface
 
             $shop->save();
 
-            $deliveryCharges =  DeliveryCharge::orderBy('position')->get();
-
-            if (!blank($deliveryCharges)) {
-                foreach ($deliveryCharges as $delivery) {
-                    $deliveryCharge                      = new MerchantDeliveryCharge();
-                    $deliveryCharge->merchant_id         = $merchant->id;
-                    $deliveryCharge->delivery_charge_id  = $delivery->id;
-                    $deliveryCharge->weight              = $delivery->weight;
-                    $deliveryCharge->category_id         = $delivery->category_id;
-                    $deliveryCharge->same_day            = $delivery->same_day;
-                    $deliveryCharge->next_day            = $delivery->next_day;
-                    $deliveryCharge->sub_city            = $delivery->sub_city;
-                    $deliveryCharge->outside_city        = $delivery->outside_city;
-                    $deliveryCharge->status              = Status::ACTIVE;
-                    $deliveryCharge->save();
-                }
-            }
+//            $deliveryCharges =  DeliveryCharge::orderBy('position')->get();
+//
+//            if (!blank($deliveryCharges)) {
+//                foreach ($deliveryCharges as $delivery) {
+//                    $deliveryCharge                      = new MerchantDeliveryCharge();
+//                    $deliveryCharge->merchant_id         = $merchant->id;
+//                    $deliveryCharge->delivery_charge_id  = $delivery->id;
+//                    $deliveryCharge->weight              = $delivery->weight;
+//                    $deliveryCharge->category_id         = $delivery->category_id;
+//                    $deliveryCharge->same_day            = $delivery->same_day;
+//                    $deliveryCharge->next_day            = $delivery->next_day;
+//                    $deliveryCharge->sub_city            = $delivery->sub_city;
+//                    $deliveryCharge->outside_city        = $delivery->outside_city;
+//                    $deliveryCharge->status              = Status::ACTIVE;
+//                    $deliveryCharge->save();
+//                }
+//            }
 
             session([
                 'otp'     => $otp,
