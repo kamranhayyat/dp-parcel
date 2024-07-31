@@ -409,8 +409,11 @@ class ParcelController extends Controller
             $fields = [
                 'weight' => 'Weight should not be empty',
                 'delivery_type_id' => 'Delivery type should not be empty',
-                'delivery_distance' => 'Delivery distance should not be empty',
             ];
+
+            if($request->delivery_type_id !== 'normal') {
+                $fields['delivery_distance'] = 'Delivery distance should not be empty';
+            }
 
             foreach ($fields as $field => $message) {
                 if ($request->input($field) == null) {

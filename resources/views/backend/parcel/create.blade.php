@@ -64,26 +64,6 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-12 col-md-6">
-                                    <label for="district_id">{{ __('Delivery Territory') }}</label>
-                                    <select style="width: 100%" id="district_id" class="form-control" name="district_id">
-                                        @foreach($districts as $district)
-                                            <option value="{{$district->id}}">{{$district->sector}}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('shop_id')
-                                    <small class="text-danger mt-2">{{ $message }}</small>
-                                    @enderror
-                                    <span id="destination_district_id_error" class="error-message text-danger mt-2"></span>
-                                </div>
-                                <div class="form-group col-12 col-md-6">
-                                    <label for="city_id">{{ __('Territory City') }}</label> <span class="text-danger">*</span>
-                                    <select id="city_id" name="city_id" data-parsley-trigger="change" require class="form-control">
-                                    </select>
-                                    @error('city_id')
-                                    <small class="text-danger mt-2">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-12 col-md-6">
                                     <label for="pickup_phone">{{ __('parcel.pickup_phone') }}</label>
                                     <input id="pickup_phone" type="text" name="pickup_phone"
                                         data-parsley-trigger="change"
@@ -158,22 +138,6 @@
                                 </div>
 
                                 <div class="form-group col-12 col-md-6">
-                                    <label for="delivery_type_id">{{ __('parcel.delivery_type') }}</label> <span
-                                        class="text-danger">*</span>
-                                    <select style="width: 100%" class="form-control" id="delivery_type_id"
-                                        name="delivery_type_id" required="">
-                                        <option value=""> {{ __('menus.select') }} {{ __('menus.delivery_type') }}
-                                        </option>
-                                        <option value="normal">Normal</option>
-                                    </select>
-                                    @error('delivery_type_id')
-                                        <small class="text-danger mt-2">{{ $message }}</small>
-                                    @enderror
-                                    <span id="delivery_type_id_error" class="error-message text-danger mt-2"></span>
-                                </div>
-
-
-                                <div class="form-group col-12 col-md-6">
                                     <label for="customer_name">{{ __('parcel.customer_name') }}</label> <span
                                         class="text-danger">*</span>
                                     <input id="customer_name" type="text" name="customer_name"
@@ -220,6 +184,40 @@
                                     <div class="">
                                         <div id="googleMap" class="custom-map"></div>
                                     </div>
+                                </div>
+                                <div class="form-group col-12 col-md-6">
+                                    <label for="district_id">{{ __('Delivery Territory') }}</label>
+                                    <select style="width: 100%" id="district_id" class="form-control" name="district_id">
+                                        @foreach($districts as $district)
+                                            <option value="{{$district->id}}">{{$district->sector}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('shop_id')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
+                                    <span id="destination_district_id_error" class="error-message text-danger mt-2"></span>
+                                </div>
+                                <div class="form-group col-12 col-md-6">
+                                    <label for="city_id">{{ __('Territory City') }}</label> <span class="text-danger">*</span>
+                                    <select id="city_id" name="city_id" data-parsley-trigger="change" require class="form-control">
+                                    </select>
+                                    @error('city_id')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-12 col-md-6">
+                                    <label for="delivery_type_id">{{ __('parcel.delivery_type') }}</label> <span
+                                        class="text-danger">*</span>
+                                    <select style="width: 100%" class="form-control" id="delivery_type_id"
+                                            name="delivery_type_id" required="">
+                                        <option value=""> {{ __('menus.select') }} {{ __('menus.delivery_type') }}
+                                        </option>
+                                        <option value="normal">Normal</option>
+                                    </select>
+                                    @error('delivery_type_id')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
+                                    <span id="delivery_type_id_error" class="error-message text-danger mt-2"></span>
                                 </div>
                                 <div class="form-group col-12 col-md-6">
                                     <label for="note">{{ __('parcel.note') }}</label>

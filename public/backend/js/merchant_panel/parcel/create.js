@@ -146,6 +146,10 @@ $(document).on('keyup change', '#cash_collection', function () {
 
 });
 
+$(document).on('change', '#weight', function () {
+    $("#delivery_type_id").trigger('change');
+});
+
 function deliveryCharge() {
     var merchant_id            = $("select#merchant_id option").filter(":selected").val();
     var weight             = $("#weight").val();
