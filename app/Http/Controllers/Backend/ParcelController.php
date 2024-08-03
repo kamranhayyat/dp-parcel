@@ -1291,7 +1291,8 @@ class ParcelController extends Controller
         $parcel = $this->repo->get($id);
         $merchant = $this->merchant->get($parcel->merchant_id);
         $shops = $this->shop->all($parcel->merchant_id);
-        return view('backend.parcel.print-label', compact('parcel', 'merchant', 'shops'));
+        $merchantLogo = $parcel->merchant->user->getImageAttribute();
+        return view('backend.parcel.print-label', compact('parcel', 'merchant', 'shops', 'merchantLogo'));
     }
 
 
