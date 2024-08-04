@@ -32,6 +32,8 @@ use Illuminate\Validation\ValidationException;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Throwable;
+use function PHPUnit\Framework\isEmpty;
 
 class ParcelController extends Controller
 {
@@ -68,7 +70,29 @@ class ParcelController extends Controller
         $parcels        = $this->repo->all();
         $deliverymans   = $this->deliveryman->all();
         $hubs           = $this->hub->all();
-        return view('backend.parcel.index', compact('parcels', 'deliverymans', 'hubs', 'request'));
+
+        $search = $request->input('search');
+        $refreshParcels = $request->input('refreshParcels');
+
+        if($search === null && $refreshParcels === null) {
+            return view('backend.parcel.index', compact('parcels', 'deliverymans', 'hubs', 'request'));
+        } else if($refreshParcels || $search !== '') {
+            $parcels = Parcel::query()
+                ->where('tracking_id', 'like', '%' . $search . '%')
+                ->orWhereHas('merchant', function ($query) use ($search) {
+                    $query->where('business_name', 'like', '%' . $search . '%')
+                        ->orWhereHas('user', function ($query) use ($search) {
+                            $query->where('mobile', 'like', '%' . $search . '%');
+                        });
+                })
+                ->orWhere('customer_phone', 'like', '%' . $search . '%')
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+
+            return response()->json([
+                'html' => view('backend.parcel.partials.parcel_table_body', compact('parcels','deliverymans', 'hubs', 'request'))->render()
+            ]);
+        }
     }
 
     public function filter(Request $request)
@@ -839,7 +863,7 @@ class ParcelController extends Controller
             $bulk_type    = ParcelStatus::DELIVERY_MAN_ASSIGN;
             $reprint = true;
             return view('backend.parcel.bulk_print', compact('parcels', 'deliveryman', 'bulk_type', 'reprint'));
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Toastr::error(__('parcel.error_msg'), __('message.error'));
             return redirect()->back();
         }
