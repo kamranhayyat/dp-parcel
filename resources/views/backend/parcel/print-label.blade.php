@@ -39,6 +39,9 @@
                                     <td  style="padding-left:5px; margin-top:10px height: 70px; width:140px;  border-right: 3px solid">
                                         <img alt="Logo" src="{{ settings()->logo_image }}" class="logo" style="width:70px">
                                     </td>
+                                    <td  style="padding-left:5px; margin-top:10px height: 70px; width:140px;  border-right: 3px solid">
+                                        <img alt="Logo" src="{{ $merchantLogo }}" class="logo" style="width:70px">
+                                    </td>
                                     <td style="padding-left: 10px;width:100%;font-size:15px;padding-right:5px">
                                         <span> <b >{{ __('MERCHANT :') }}</b> </span><span style="font-weight:bold;font-size:13px"> {{ $parcel->merchant->business_name }}</span><br>
                                         <span style="font-size:13px;font-weight:bold"> {{$parcel->merchant->address}}</span><br>
@@ -57,9 +60,15 @@
                                     </td>
                                     <td  width="" style=" padding-left:10px;padding-right:10px;line-height:1.2; font-size:15px;border-top:#000000  1px solid;border-bottom:#000000 1px solid;">
                                         <div style="padding-bottom: 0px;padding-top: 0px; ">
-                                            <span><b >HUB</b>  : </span><span style="font-size:13px;font-weight:bold">{{ optional($parcel->hub)->name }}</span><br>
+                                            <span><b >PICKUP HUB</b>  : </span><span style="font-size:13px;font-weight:bold">{{ optional($parcel->hub)->name }}</span><br>
                                             <span><b >CASH</b> :</span><span style="font-size:13px;font-weight:bold"> {{ $parcel->cash_collection }} </span></br>
-                                            <span><b >ROUTE</b> :</span><span style="font-size:13px;font-weight:bold"> ISD </span>
+                                            <?php
+                                                $district = \App\Models\District::query()->select('sector')->where('id', $parcel->district_id)->first();
+                                                $city = \App\Models\City::query()->select('name')->where('id', $parcel->city_id)->first();
+                                            ?>
+                                            <span><b >DELIVERY TERRITORY</b> :</span><span style="font-size:13px;font-weight:bold"> {{ $district != null ? $district['sector'] : null }} </span></br>
+                                            <span><b >TERRITORY CITY</b> :</span><span style="font-size:13px;font-weight:bold"> {{ $city != null ? $city['name'] : null }} </span></br>
+                                        </div>
                                         </div>
                                     </td>
                                 </tr>

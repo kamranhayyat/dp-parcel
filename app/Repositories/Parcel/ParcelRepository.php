@@ -54,9 +54,9 @@ class ParcelRepository implements ParcelInterface
 
         if (!blank($userHubID)) {
 
-            return Parcel::with('parcelEvent')->where('hub_id', $userHubID)->orderBy('priority_type_id')->orderBy('id', 'desc')->paginate(10);
+            return Parcel::with('parcelEvent')->where('hub_id', $userHubID)->orderBy('priority_type_id')->orderBy('created_at', 'desc')->paginate(10);
         } else {
-            return Parcel::with('parcelEvent')->orderBy('priority_type_id')->orderBy('id', 'desc')->paginate(10);
+            return Parcel::with('parcelEvent')->orderBy('created_at', 'desc')->paginate(10);
         }
     }
 

@@ -93,7 +93,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card table-card">
                     <div class="row pl-4 pr-4 pt-4">
                         <div class="col-12 col-xl-6">
                             <form action="{{route('parcel.specific.search') }}" method="get">
@@ -102,15 +102,6 @@
                                     <p class="h3">{{ __('parcel.title') }} </p>
                                     <input id="Psearch" class="form-control parcelSearch group-input d-lg-block " name="search" type="text" placeholder="{{ __('levels.search') }}..." value="{{ $request->search }}">
                                     <button type="submit" class="btn btn-sm btn-space btn-primary group-btn  d-lg-block" style="margin-bottom: 0px;margin-left:0px!important"><i class="fa fa-filter"></i> {{ __('levels.search') }}</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-12 d-lg-none">
-                            <form action="{{route('parcel.specific.search') }}" method="get">
-                                @csrf
-                                <div class="d-flex parcelsearchFlex ml-0">
-                                    <input id="Psearch" class="parcelml-0 form-control  group-input w-100 " name="search" type="text" placeholder="{{ __('levels.search') }}..." value="{{ $request->search }}">
-                                    <button type="submit" class="btn btn-sm btn-space btn-primary group-btn" style="margin-bottom: 0px;margin-left:0px!important"><i class="fa fa-filter"></i> {{ __('levels.search') }}</button>
                                 </div>
                             </form>
                         </div>
@@ -144,6 +135,13 @@
                             </div>
                         @endif
                     </div>
+                    <div class="row pl-4 pr-4 pt-4">
+                        <div class="col-4 col-xl-4">
+                            <div class="d-flex parcelsearchFlex">
+                                <button type="button" id="refresh-parcels" class="btn btn-sm btn-space btn-primary group-btn  d-lg-block" style="margin-bottom: 0px;margin-left:0px!important"><i class="fa fa-filter"></i> {{ __('Refresh') }}</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="table" class="table    parcelTable" style="width:100%">
@@ -166,7 +164,7 @@
                                     <th>{{ __('View Proof of Delivery')}}</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="parcels-table-body">
                                 @php
                                     $i=1;
                                 @endphp
@@ -315,7 +313,7 @@
                             @include('backend.parcel.assign_return_to_merchant_bulk')
                         </div>
                     </div>
-                    <div class="col-12 mt-3">
+                    <div class="col-12 mt-3 links">
                         <div class="table-responsive">
                             <span>{{ $parcels->appends($request->all())->links() }}</span>
                             <p class="p-2 small">
@@ -363,5 +361,53 @@
     <script src="{{ static_asset('backend/js/parcel/custom.js') }}"></script>
     <script src="{{ static_asset('backend/js/parcel/filter.js') }}"></script>
     <script src="{{ static_asset('backend/js/parcel/priorityChange.js') }}"></script>
- 
+
+    <script>
+        $(document).ready(function() {
+            $('#refresh-parcels').on('click', function () {
+                $.ajax({
+                    url: '{{ route('parcel.index') }}',
+                    method: 'GET',
+                    data: {
+                        refreshParcels: true
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        $('.table-card .card-body').remove();
+                        $('.table-card .links').remove();
+                        $('.table-card').append(response.html);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+
+            $('#Psearch').on('keyup', function() {
+                let searchValue = $(this).val();
+
+                $.ajax({
+                    url: '{{ route('parcel.index') }}',
+                    method: 'GET',
+                    data: {
+                        search: searchValue
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        $('.table-card .card-body').remove();
+                        $('.table-card .links').remove();
+                        $('.table-card').append(response.html);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+
 @endpush
