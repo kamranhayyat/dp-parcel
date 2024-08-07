@@ -74,6 +74,7 @@ class ParcelImport implements ToModel, WithHeadingRow ,WithValidation , SkipsEmp
         $codAmount            = $codChargeAmount['codAmount'];
         $merchantCodCharge    = $codChargeAmount['merchantCodCharge'];
         $vat                  = $merchant->vat;
+
         if($liquid_fragile){
             $liquidFragileAmount = SettingHelper('fragile_liquid_charge');
         }
@@ -190,15 +191,19 @@ class ParcelImport implements ToModel, WithHeadingRow ,WithValidation , SkipsEmp
         $data['merchantCodCharge'] = 0;
         $data['codAmount'] = 0;
 
+        // $merchant->cod_charges['inside_city']
+        // $merchant->cod_charges['sub_city']
+        // $merchant->cod_charges['outside_city']
+        //making second param of percentage 0, will fix it later on
         if($delivery_type_id !=='' && $delivery_type_id =='express' || $delivery_type_id =='normal'){
             $data['merchantCodCharge'] = $merchant->cod_charges['inside_city'];
-            $data['codAmount'] = $this->percentage($cash_collection, $merchant->cod_charges['inside_city']);
+            $data['codAmount'] = $this->percentage($cash_collection, 0);
         }else if($delivery_type_id !='' && $delivery_type_id =='3'){
             $data['merchantCodCharge'] = $merchant->cod_charges['sub_city'];
-            $data['codAmount'] = $this->percentage($cash_collection, $merchant->cod_charges['sub_city']);
+            $data['codAmount'] = $this->percentage($cash_collection, 0);
         }else if($delivery_type_id !='' && $delivery_type_id =='4') {
             $data['merchantCodCharge'] = $merchant->cod_charges['outside_city'];
-            $data['codAmount'] = $this->percentage($cash_collection, $merchant->cod_charges['outside_city']);
+            $data['codAmount'] = $this->percentage($cash_collection, 0);
         }else {
             $data['merchantCodCharge'] = 0;
             $data['codAmount'] = $this->percentage($cash_collection, 0);
