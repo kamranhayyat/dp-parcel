@@ -183,6 +183,7 @@ class MerchantParcelRepository implements MerchantParcelInterface
 
             $parcel->merchant_shop_id       = $request->shop_id;
             $parcel->pickup_phone           = $request->pickup_phone;
+            $parcel->secondary_phone        = $request->secondary_phone;
             $parcel->pickup_address         = $request->pickup_address;
             $parcel->pickup_lat             = $request->pickup_lat;
             $parcel->pickup_long            = $request->pickup_long;
@@ -488,7 +489,8 @@ class MerchantParcelRepository implements MerchantParcelInterface
 
             $parcel->merchant_shop_id       = $request->shop_id;
             $parcel->pickup_phone           = $request->pickup_phone;
-            $parcel->pickup_address         = $request->pickup_address;
+            $parcel->pickup_phone           = $request->pickup_phone;
+            $parcel->secondary_phone         = $request->secondary_phone;
             $parcel->pickup_lat             = $request->pickup_lat;
             $parcel->pickup_long            = $request->pickup_long;
 

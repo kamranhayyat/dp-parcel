@@ -41,6 +41,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="contact">{{ __('merchantshops.contact') }}</label> <span class="text-danger">*</span>
+                                    <span>{{ mobile_prefix() }}</span>
                                     <input id="contact" type="phone" name="contact_no" data-parsley-trigger="change" placeholder="{{ __('merchantPlaceholder.phone') }}" autocomplete="off" class="form-control" value="{{$shop->contact_no}}" require>
                                     @error('contact_no')
                                     <small class="text-danger mt-2">{{ $message }}</small>

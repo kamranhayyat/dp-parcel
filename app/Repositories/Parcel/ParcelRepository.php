@@ -321,7 +321,6 @@ class ParcelRepository implements ParcelInterface
 
     public function store($request)
     {
-
         try {
 
             DB::beginTransaction();
@@ -342,6 +341,7 @@ class ParcelRepository implements ParcelInterface
             }
             $parcel->merchant_shop_id       = $request->shop_id;
             $parcel->pickup_phone           = $request->pickup_phone;
+            $parcel->secondary_phone        = $request->secondary_phone;
             $parcel->pickup_address         = $request->pickup_address;
 
             $parcel->pickup_lat             = $request->pickup_lat;
@@ -486,6 +486,7 @@ class ParcelRepository implements ParcelInterface
             }
             return true;
         } catch (\Exception $e) {
+            dd($e);
 
             DB::rollBack();
             return false;
@@ -691,6 +692,7 @@ class ParcelRepository implements ParcelInterface
             }
             $parcel->merchant_shop_id       = $request->shop_id;
             $parcel->pickup_phone           = $request->pickup_phone;
+            $parcel->secondary_phone        = $request->secondary_phone;
             $parcel->pickup_address         = $request->pickup_address;
 
             $parcel->pickup_lat             = $request->pickup_lat;

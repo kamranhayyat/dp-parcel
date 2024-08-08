@@ -21,7 +21,7 @@ class Parcel extends Model
 {
     use HasFactory, LogsActivity;
     protected $fillable = [
-        'merchant_id', 'merchant_shop_id', 'pickup_address', 'pickup_phone', 'customer_name', 'customer_phone',
+        'merchant_id', 'merchant_shop_id', 'pickup_address', 'pickup_phone', 'secondary_phone', 'customer_name', 'customer_phone',
         'customer_address', 'invoice_no', 'category_id', 'weight', 'delivery_type_id', 'pickup_date', 'delivery_date', 'packaging_id', 'cash_collection', 'first_hub_id', 'hub_id',
         'selling_price', 'liquid_fragile_amount', 'packaging_amount', 'delivery_charge', 'cod_charge', 'cod_amount',
         'vat', 'vat_amount', 'total_delivery_amount', 'current_payable', 'note', 'tracking_id', 'status', 'created_at', 'updated_at', 'pickup_lat', 'pickup_long', 'customer_lat', 'customer_long', 'district_id', 'city_id'

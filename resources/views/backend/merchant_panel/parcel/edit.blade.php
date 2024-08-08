@@ -220,6 +220,17 @@
                                         <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
                                 </div>
+                                <div class="form-group col-12 col-md-6">
+                                    <label for="secondary_phone">{{ __('Secondary Customer Phone') }}</label> <span
+                                        class="text-danger">*</span>
+                                    <input id="secondary_phone" type="text" name="secondary_phone"
+                                           data-parsley-trigger="change" placeholder="{{ __('Secondary Customer Phone') }}"
+                                           autocomplete="off" class="form-control"
+                                           value="{{ old('secondary_phone', $parcel->secondary_phone) }}" required="">
+                                    @error('secondary_phone')
+                                    <small class="text-danger mt-2">{{ $message }}</small>
+                                    @enderror
+                                </div>
                             </div>
 
                             <div class="row">

@@ -40,7 +40,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="contact">{{ __('merchantshops.contact') }}</label> <span class="text-danger">*</span>
-                                    <input id="contact" type="phone" name="contact_no" data-parsley-trigger="change" placeholder="{{ __('merchantPlaceholder.phone') }}" autocomplete="off" class="form-control" value="{{old('contact_no')}}" require>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">{{ mobile_prefix() }}</span>
+                                        <div class="form-floating">
+                                            <input id="contact" type="phone" name="contact_no" data-parsley-trigger="change" placeholder="{{ __('merchantPlaceholder.phone') }}" autocomplete="off" class="form-control" value="{{old('contact_no')}}" require>
+                                        </div>
+                                    </div>
                                     @error('contact_no')
                                     <small class="text-danger mt-2">{{ $message }}</small>
                                     @enderror
